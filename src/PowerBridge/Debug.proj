@@ -1,0 +1,22 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="PowerBridge.props" />
+  <Target Name="InvokePowerShellStuff">
+    <PropertyGroup>
+      <Script><![CDATA[
+        function Say-Hello
+        {
+            param
+            (
+                $To
+            )
+            
+            Write-Host "Hello, $To"
+        }
+        
+        Say-Hello -To Rafael
+      ]]></Script>
+    </PropertyGroup>
+    <InvokePowerShell Expression="$(Script)" />
+    <InvokePowerShell Expression="&amp; '$(MSBuildThisFileDirectory)Debug.ps1'" />
+  </Target>
+</Project>
