@@ -3,7 +3,7 @@ PowerBridge
 
 What is PowerBridge?
 --------------------------------
-PowerBridge is a build task library that bridges the worlds of MSBuild and PowerShell. PowerBridge's build tasks host the PowerShell runtime and forward Write-Host, Write-Warning, Write-Verbose and Write-Error messages to MSBuild appropriately, allowing you to call your PowerShell scripts from within your build with deep MSBuild integration.
+PowerBridge is a build task library that bridges the worlds of MSBuild and PowerShell. PowerBridge's build tasks host the PowerShell runtime and forwards Write-Host, Write-Warning, Write-Verbose and Write-Error messages to MSBuild appropriately, allowing you to call your PowerShell scripts from within your build with deep MSBuild integration.
 
 How do I get started?
 --------------------------------
