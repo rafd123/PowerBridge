@@ -11,7 +11,7 @@ Check out the [getting started guide](https://github.com/PowerBridge/PowerBridge
 
 Where can I get it?
 --------------------------------
-PowerBridge is available as a solution-level NuGet package. You can install it from Visual Studio's NuGet Package Manager UI, or from the package manager console:
+PowerBridge is available as a NuGet package. You can install it from Visual Studio's NuGet Package Manager UI, or from the package manager console:
 
     PM> Install-Package PowerBridge
 
