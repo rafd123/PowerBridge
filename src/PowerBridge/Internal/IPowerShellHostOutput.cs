@@ -1,6 +1,4 @@
-﻿using System;
-using System.Management.Automation;
-using System.Text.RegularExpressions;
+﻿using System.Management.Automation;
 using Microsoft.Build.Framework;
 
 namespace PowerBridge.Internal
@@ -63,35 +61,18 @@ namespace PowerBridge.Internal
 
         public void WriteError(ErrorRecord errorRecord)
         {
-            // The ErrorRecord's invocation info doesn't necessarily
-            // contain the information where the error was thrown but
-            // rather what call was made that eventually let to the error.
-            // Nonetheless, let's use it as a fallback.
-            var file = errorRecord.InvocationInfo.ScriptName;
-            var lineNumber = errorRecord.InvocationInfo.ScriptLineNumber;
-            var message = errorRecord + Environment.NewLine + errorRecord.ScriptStackTrace;
-
-            // Ideally, we'd be able to use a System.Management.Automation.CallStackFrame
-            // objects in order to determine where the error was thrown, however the
-            // ErrorRecord object doesn't expose them. As a result, we have to resort
-            // to parsing the ErrorRecord.ScriptStackTrace.
-            var match = Regex.Match(errorRecord.ScriptStackTrace, @".*, (?<file>.+): line (?<line>[\d]+)");
-            if (match.Success)
-            {
-                file = match.Groups["file"].Value;
-                lineNumber = int.Parse(match.Groups["line"].Value);
-            }
+            var info = errorRecord.GetErrorInfo();
 
             _log.LogError(
                 subcategory: null,
                 errorCode: null,
                 helpKeyword: null,
-                file: file,
-                lineNumber: lineNumber,
-                columnNumber: 0,
+                file: info.File,
+                lineNumber: info.LineNumber,
+                columnNumber: info.ColumnNumber,
                 endLineNumber: 0,
                 endColumnNumber: 0,
-                message: message);
+                message: info.Message);
         }
     }
 }
