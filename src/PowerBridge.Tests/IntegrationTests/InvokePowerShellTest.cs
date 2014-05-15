@@ -122,6 +122,37 @@ namespace PowerBridge.Tests.IntegrationTests
                     message: "hello" + Environment.NewLine +
                              "at <ScriptBlock>, <No file>: line 1"));
         }
+        
+        [Test]
+        public void WhenInvokingInlineWriteErrorWithExplicitFilenameAndLine()
+        {
+            var buildTaskLog = new MockBuildTaskLog();
+
+            InvokePowerShell.Execute(@"Write-Error 'c:\foo\bar.txt(123) : This is a test'", buildTaskLog);
+
+            buildTaskLog.AssertLogEntriesAre(
+                new LogError(
+                    file: @"c:\foo\bar.txt",
+                    lineNumber: 123,
+                    message: @"c:\foo\bar.txt(123) : This is a test" + Environment.NewLine +
+                             @"at <ScriptBlock>, <No file>: line 1"));
+        }
+
+        [Test]
+        public void WhenInvokingInlineWriteErrorWithExplicitFilenameLineAndColumn()
+        {
+            var buildTaskLog = new MockBuildTaskLog();
+
+            InvokePowerShell.Execute(@"Write-Error 'c:\foo\bar.txt(123,456) : This is a test'", buildTaskLog);
+
+            buildTaskLog.AssertLogEntriesAre(
+                new LogError(
+                    file: @"c:\foo\bar.txt",
+                    lineNumber: 123,
+                    columnNumber: 456,
+                    message: @"c:\foo\bar.txt(123,456) : This is a test" + Environment.NewLine +
+                             @"at <ScriptBlock>, <No file>: line 1"));
+        }   
 
         [Test]
         public void WhenInvokingScriptFile()

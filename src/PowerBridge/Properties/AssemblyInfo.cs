@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("PowerBridge")]
 [assembly: AssemblyCopyright("Copyright © Rafael Dowling Goodman 2014")]
 
-[assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("1.1.*")]
 
 [assembly: InternalsVisibleTo("PowerBridge.Tests")]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]

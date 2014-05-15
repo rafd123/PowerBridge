@@ -17,21 +17,52 @@ namespace PowerBridge.Internal
 
             string file;
             int lineNumber;
-            if (!TryGetFileAndLineFromScriptStackTrace(errorRecord.ScriptStackTrace, out file, out lineNumber))
+            int columnNumber;
+            if (!TryGetFileAndLineFromErrorRecordMessage(errorRecord.ToString(), out file, out lineNumber, out columnNumber))
             {
-                // The ErrorRecord's invocation info doesn't necessarily
-                // contain the information where the error was thrown but
-                // rather what call was made that eventually let to the error.
-                // Nonetheless, let's use it as a fallback.
-                file = errorRecord.InvocationInfo.ScriptName;
-                lineNumber = errorRecord.InvocationInfo.ScriptLineNumber;                
+                if (!TryGetFileAndLineFromScriptStackTrace(errorRecord.ScriptStackTrace, out file, out lineNumber))
+                {
+                    // The ErrorRecord's invocation info doesn't necessarily
+                    // contain the information where the error was thrown but
+                    // rather what call was made that eventually let to the error.
+                    // Nonetheless, let's use it as a fallback.
+                    file = errorRecord.InvocationInfo.ScriptName;
+                    lineNumber = errorRecord.InvocationInfo.ScriptLineNumber;
+                }                
             }
 
             return new ErrorRecordInfo(
                 message: message,
                 file: file,
                 lineNumber: lineNumber,
-                columnNumber: 0);
+                columnNumber: columnNumber);
+        }
+
+        private static bool TryGetFileAndLineFromErrorRecordMessage(string errorRecordMessage, out string file, out int lineNumber, out int columnNumber)
+        {
+            file = null;
+            lineNumber = 0;
+            columnNumber = 0;
+
+            // If the error message conforms to the perscribed custom build step error formatting
+            // (see http://msdn.microsoft.com/en-us/library/yxkt8b26.aspx) let's use this information
+            // for the file and line info since its more contextual
+            var match = Regex.Match(errorRecordMessage, @"^(?<file>.+?)\((?<line>\d+)(,(?<column>\d+))?\) : ");
+            if (!match.Success)
+            {
+                return false;
+            }
+
+            file = match.Groups["file"].Value;
+            lineNumber = int.Parse(match.Groups["line"].Value);
+
+            var columnValue = match.Groups["column"].Value;
+            if (!string.IsNullOrEmpty(columnValue))
+            {
+                columnNumber = int.Parse(columnValue);    
+            }
+
+            return true;
         }
 
         private static bool TryGetFileAndLineFromScriptStackTrace(string scriptStackTrace, out string file, out int lineNumber)
