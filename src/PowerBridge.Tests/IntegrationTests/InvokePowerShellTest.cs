@@ -134,7 +134,8 @@ namespace PowerBridge.Tests.IntegrationTests
                 new LogError(
                     file: @"c:\foo\bar.txt",
                     lineNumber: 123,
-                    message: @"c:\foo\bar.txt(123) : This is a test" + Environment.NewLine +
+                    message: @"This is a test" + Environment.NewLine +
+                             @"at c:\foo\bar.txt: line 123" + Environment.NewLine +
                              @"at <ScriptBlock>, <No file>: line 1"));
         }
 
@@ -150,7 +151,8 @@ namespace PowerBridge.Tests.IntegrationTests
                     file: @"c:\foo\bar.txt",
                     lineNumber: 123,
                     columnNumber: 456,
-                    message: @"c:\foo\bar.txt(123,456) : This is a test" + Environment.NewLine +
+                    message: @"This is a test" + Environment.NewLine +
+                             @"at c:\foo\bar.txt: line 123" + Environment.NewLine +
                              @"at <ScriptBlock>, <No file>: line 1"));
         }   
 

@@ -65,7 +65,8 @@ namespace PowerBridge.Internal
                 columnNumber = int.Parse(columnValue);
             }
 
-            var message = errorRecord + Environment.NewLine +
+            var message = match.Groups["message"].Value + Environment.NewLine +
+                          string.Format(CultureInfo.CurrentCulture, "at {0}: line {1}", file, lineNumber) + Environment.NewLine +
                           errorRecord.ScriptStackTrace;
 
             return new ErrorRecordInfo(
