@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Management.Automation;
 using System.Text.RegularExpressions;
 
@@ -6,6 +7,12 @@ namespace PowerBridge.Internal
 {
     internal static class ErrorRecordExtensions
     {
+        private static readonly Func<ErrorRecord, ErrorRecordInfo>[] ErrorRecordParsers =
+        {
+            GetErrorInfoFromMessage,
+            GetErrorInfoFromScriptStackTrace
+        };
+
         public static ErrorRecordInfo GetErrorInfo(this ErrorRecord errorRecord)
         {
             if (errorRecord == null)
@@ -13,23 +20,53 @@ namespace PowerBridge.Internal
                 throw new ArgumentNullException("errorRecord");
             }
 
+            foreach (var parser in ErrorRecordParsers)
+            {
+                var errorRecordInfo = parser(errorRecord);
+                if (errorRecordInfo != null)
+                {
+                    return errorRecordInfo;
+                }
+            }
+
+            // The ErrorRecord's invocation info doesn't necessarily
+            // contain the information where the error was thrown but
+            // rather what call was made that eventually let to the error.
+            // Nonetheless, let's use it as a fallback.
+            var file = errorRecord.InvocationInfo.ScriptName;
+            var lineNumber = errorRecord.InvocationInfo.ScriptLineNumber;
             var message = errorRecord + Environment.NewLine + errorRecord.ScriptStackTrace;
 
-            string file;
-            int lineNumber;
-            int columnNumber;
-            if (!TryGetFileAndLineFromErrorRecordMessage(errorRecord.ToString(), out file, out lineNumber, out columnNumber))
+            return new ErrorRecordInfo(
+                message: message,
+                file: file,
+                lineNumber: lineNumber,
+                columnNumber: 0);
+        }
+
+        private static ErrorRecordInfo GetErrorInfoFromMessage(ErrorRecord errorRecord)
+        {
+            // If the error message conforms to the perscribed custom build step error formatting
+            // (see http://msdn.microsoft.com/en-us/library/yxkt8b26.aspx) let's use this information
+            // for the file and line info since its more contextual
+            var match = Regex.Match(errorRecord.ToString(), @"^(?<file>.+?)\((?<line>\d+)(,(?<column>\d+))?\) : (?<message>.*)");
+            if (!match.Success)
             {
-                if (!TryGetFileAndLineFromScriptStackTrace(errorRecord.ScriptStackTrace, out file, out lineNumber))
-                {
-                    // The ErrorRecord's invocation info doesn't necessarily
-                    // contain the information where the error was thrown but
-                    // rather what call was made that eventually let to the error.
-                    // Nonetheless, let's use it as a fallback.
-                    file = errorRecord.InvocationInfo.ScriptName;
-                    lineNumber = errorRecord.InvocationInfo.ScriptLineNumber;
-                }                
+                return null;
             }
+
+            var file = match.Groups["file"].Value;
+            var lineNumber = int.Parse(match.Groups["line"].Value);
+
+            var columnNumber = 0;
+            var columnValue = match.Groups["column"].Value;
+            if (!string.IsNullOrEmpty(columnValue))
+            {
+                columnNumber = int.Parse(columnValue);
+            }
+
+            var message = errorRecord + Environment.NewLine +
+                          errorRecord.ScriptStackTrace;
 
             return new ErrorRecordInfo(
                 message: message,
@@ -38,51 +75,28 @@ namespace PowerBridge.Internal
                 columnNumber: columnNumber);
         }
 
-        private static bool TryGetFileAndLineFromErrorRecordMessage(string errorRecordMessage, out string file, out int lineNumber, out int columnNumber)
+        private static ErrorRecordInfo GetErrorInfoFromScriptStackTrace(ErrorRecord errorRecord)
         {
-            file = null;
-            lineNumber = 0;
-            columnNumber = 0;
-
-            // If the error message conforms to the perscribed custom build step error formatting
-            // (see http://msdn.microsoft.com/en-us/library/yxkt8b26.aspx) let's use this information
-            // for the file and line info since its more contextual
-            var match = Regex.Match(errorRecordMessage, @"^(?<file>.+?)\((?<line>\d+)(,(?<column>\d+))?\) : ");
-            if (!match.Success)
-            {
-                return false;
-            }
-
-            file = match.Groups["file"].Value;
-            lineNumber = int.Parse(match.Groups["line"].Value);
-
-            var columnValue = match.Groups["column"].Value;
-            if (!string.IsNullOrEmpty(columnValue))
-            {
-                columnNumber = int.Parse(columnValue);    
-            }
-
-            return true;
-        }
-
-        private static bool TryGetFileAndLineFromScriptStackTrace(string scriptStackTrace, out string file, out int lineNumber)
-        {
-            file = null;
-            lineNumber = 0;
-
             // Ideally, we'd be able to use a System.Management.Automation.CallStackFrame
             // objects in order to determine where the error was thrown, however the
             // ErrorRecord object doesn't expose them. As a result, we have to resort
             // to parsing the ErrorRecord.ScriptStackTrace.
-            var match = Regex.Match(scriptStackTrace, @".*, (?<file>.+): line (?<line>[\d]+)");
+            var match = Regex.Match(errorRecord.ScriptStackTrace, @".*, (?<file>.+): line (?<line>[\d]+)");
             if (!match.Success)
             {
-                return false;
+                return null;
             }
 
-            file = match.Groups["file"].Value;
-            lineNumber = int.Parse(match.Groups["line"].Value);
-            return true;
+            var file = match.Groups["file"].Value;
+            var lineNumber = int.Parse(match.Groups["line"].Value);
+            var message = errorRecord + Environment.NewLine +
+                          errorRecord.ScriptStackTrace;
+
+            return new ErrorRecordInfo(
+                message: message,
+                file: file,
+                lineNumber: lineNumber,
+                columnNumber: 0);  
         }
     }
 
