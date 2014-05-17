@@ -1,9 +1,11 @@
-﻿using System.Management.Automation;
+﻿using System;
+using System.Management.Automation;
+using System.Text;
 using Microsoft.Build.Framework;
 
 namespace PowerBridge.Internal
 {
-    internal interface IPowerShellHostOutput
+    internal interface IPowerShellHostOutput : IDisposable
     {
         void WriteDebugLine(string message);
 
@@ -23,6 +25,7 @@ namespace PowerBridge.Internal
     internal sealed class PowerShellHostOutput : IPowerShellHostOutput
     {
         private readonly IBuildTaskLog _log;
+        private readonly StringBuilder _writeBuffer = new StringBuilder();
 
         public PowerShellHostOutput(IBuildTaskLog log)
         {
@@ -41,12 +44,20 @@ namespace PowerBridge.Internal
 
         public void Write(string message)
         {
-            _log.LogMessage(MessageImportance.High, message);
+            if (message == "\n" && _writeBuffer.Length != 0)
+            {
+                _log.LogMessage(MessageImportance.High, _writeBuffer.ToString());
+                _writeBuffer.Clear();
+                return;
+            }
+
+            _writeBuffer.Append(message);
         }
 
         public void WriteLine(string value)
         {
             Write(value);
+            Write("\n");
         }
 
         public void WriteWarningLine(string value)
@@ -73,6 +84,14 @@ namespace PowerBridge.Internal
                 endLineNumber: 0,
                 endColumnNumber: 0,
                 message: info.Message);
+        }
+
+        public void Dispose()
+        {
+            if (_writeBuffer.Length != 0)
+            {
+                Write("\n");
+            }
         }
     }
 }

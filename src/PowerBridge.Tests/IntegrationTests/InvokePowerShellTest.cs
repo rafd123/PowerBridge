@@ -21,8 +21,18 @@ namespace PowerBridge.Tests.IntegrationTests
             InvokePowerShell.Execute("Write-Host 'hello'", buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
-                new LogMessage("hello", MessageImportance.High),
-                new LogMessage("\n", MessageImportance.High));
+                new LogMessage("hello", MessageImportance.High));
+        }
+
+        [Test]
+        public void WhenInvokingInlineWriteHostNoNewLine()
+        {
+            var buildTaskLog = new MockBuildTaskLog();
+
+            InvokePowerShell.Execute("Write-Host 'hello' -NoNewLine", buildTaskLog);
+
+            buildTaskLog.AssertLogEntriesAre(
+                new LogMessage("hello", MessageImportance.High));
         }
 
         [Test]
@@ -170,7 +180,6 @@ namespace PowerBridge.Tests.IntegrationTests
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogMessage("Alive", MessageImportance.High),
-                new LogMessage("\n", MessageImportance.High),
                 new LogWarning("Danger"),
                 new LogError(
                     file: scriptFilePath,
@@ -199,11 +208,8 @@ Write-Host 'goodbye'
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogMessage("hello", MessageImportance.High),
-                new LogMessage("\n", MessageImportance.High),
                 new LogMessage("in foo", MessageImportance.High),
-                new LogMessage("\n", MessageImportance.High),
-                new LogMessage("goodbye", MessageImportance.High),
-                new LogMessage("\n", MessageImportance.High));
+                new LogMessage("goodbye", MessageImportance.High));
         }
 
         private static string GetTestResourceFilePath(string testResource, [CallerFilePath] string sourceFilePath = "")

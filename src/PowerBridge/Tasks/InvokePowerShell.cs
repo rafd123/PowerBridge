@@ -21,33 +21,35 @@ namespace PowerBridge.Tasks
         {
             Environment.SetEnvironmentVariable("PSExecutionPolicyPreference", "Bypass");
 
-            var powerShellOutput = new PowerShellHostOutput(taskLog);
-            var host = new PowerShellHost(powerShellOutput);
-            using (var runspace = RunspaceFactory.CreateRunspace(host))
-            using (var powerShell = System.Management.Automation.PowerShell.Create())
+            using (var powerShellOutput = new PowerShellHostOutput(taskLog))
             {
-                powerShell.Runspace = runspace;
-                powerShell.Streams.Error.DataAdded += (sender, args) =>
+                var host = new PowerShellHost(powerShellOutput);
+                using (var runspace = RunspaceFactory.CreateRunspace(host))
+                using (var powerShell = PowerShell.Create())
                 {
-                    powerShellOutput.WriteError(powerShell.Streams.Error[args.Index]);
-                };
-
-                runspace.Open();
-                powerShell.AddScript(expression);
-
-                try
-                {
-                    powerShell.Invoke();
-                }
-                catch (RuntimeException e)
-                {
-                    if (e.ErrorRecord == null)
+                    powerShell.Runspace = runspace;
+                    powerShell.Streams.Error.DataAdded += (sender, args) =>
                     {
-                        throw;
-                    }
+                        powerShellOutput.WriteError(powerShell.Streams.Error[args.Index]);
+                    };
 
-                    powerShellOutput.WriteError(e.ErrorRecord);
-                }
+                    runspace.Open();
+                    powerShell.AddScript(expression);
+
+                    try
+                    {
+                        powerShell.Invoke();
+                    }
+                    catch (RuntimeException e)
+                    {
+                        if (e.ErrorRecord == null)
+                        {
+                            throw;
+                        }
+
+                        powerShellOutput.WriteError(e.ErrorRecord);
+                    }
+                }                
             }            
         }
     }
