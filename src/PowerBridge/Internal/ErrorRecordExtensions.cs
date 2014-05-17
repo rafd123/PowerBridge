@@ -44,6 +44,7 @@ namespace PowerBridge.Internal
                 columnNumber: 0);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "PowerBridge.Internal.ErrorRecordInfo.#ctor(System.String,System.String,System.Int32,System.Int32)")]
         private static ErrorRecordInfo GetErrorInfoFromMessage(ErrorRecord errorRecord)
         {
             // If the error message conforms to the perscribed custom build step error formatting
@@ -56,13 +57,13 @@ namespace PowerBridge.Internal
             }
 
             var file = match.Groups["file"].Value;
-            var lineNumber = int.Parse(match.Groups["line"].Value);
+            var lineNumber = int.Parse(match.Groups["line"].Value, CultureInfo.CurrentCulture);
 
             var columnNumber = 0;
             var columnValue = match.Groups["column"].Value;
             if (!string.IsNullOrEmpty(columnValue))
             {
-                columnNumber = int.Parse(columnValue);
+                columnNumber = int.Parse(columnValue, CultureInfo.CurrentCulture);
             }
 
             var message = match.Groups["message"].Value + Environment.NewLine +
@@ -89,7 +90,7 @@ namespace PowerBridge.Internal
             }
 
             var file = match.Groups["file"].Value;
-            var lineNumber = int.Parse(match.Groups["line"].Value);
+            var lineNumber = int.Parse(match.Groups["line"].Value, CultureInfo.CurrentCulture);
             var message = errorRecord + Environment.NewLine +
                           errorRecord.ScriptStackTrace;
 

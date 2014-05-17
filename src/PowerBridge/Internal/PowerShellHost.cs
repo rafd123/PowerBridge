@@ -155,7 +155,7 @@ namespace PowerBridge.Internal
 
             private static Exception NonInteractiveException()
             {
-                return new InvalidOperationException("Windows PowerShell is in NonInteractive mode. Read and Prompt functionality is not available.");
+                return new InvalidOperationException("Windows PowerShell is in non-interactive mode. Read and Prompt functionality is not available.");
             }
 
             private class RawUserInterface : PSHostRawUserInterface

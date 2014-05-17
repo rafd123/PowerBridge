@@ -59,7 +59,7 @@ namespace PowerBridge.Tests.IntegrationTests
                 new LogError(
                     file: "<No file>",
                     lineNumber: 1,
-                    message: "Windows PowerShell is in NonInteractive mode. Read and Prompt functionality is not available." + Environment.NewLine +
+                    message: "Windows PowerShell is in non-interactive mode. Read and Prompt functionality is not available." + Environment.NewLine +
                              "at <ScriptBlock>, <No file>: line 1"));
         }
 
@@ -74,7 +74,7 @@ namespace PowerBridge.Tests.IntegrationTests
                 new LogError(
                     file: "<No file>",
                     lineNumber: 1,
-                    message: "Windows PowerShell is in NonInteractive mode. Read and Prompt functionality is not available." + Environment.NewLine +
+                    message: "Windows PowerShell is in non-interactive mode. Read and Prompt functionality is not available." + Environment.NewLine +
                              "at <ScriptBlock>, <No file>: line 1"));
         }
 
@@ -89,7 +89,7 @@ namespace PowerBridge.Tests.IntegrationTests
                 new LogError(
                     file: "<No file>",
                     lineNumber: 1,
-                    message: "Windows PowerShell is in NonInteractive mode. Read and Prompt functionality is not available." + Environment.NewLine +
+                    message: "Windows PowerShell is in non-interactive mode. Read and Prompt functionality is not available." + Environment.NewLine +
                              "at <ScriptBlock>, <No file>: line 1"));
         }
 
@@ -104,7 +104,7 @@ namespace PowerBridge.Tests.IntegrationTests
                 new LogError(
                     file: "<No file>",
                     lineNumber: 1,
-                    message: "Windows PowerShell is in NonInteractive mode. Read and Prompt functionality is not available." + Environment.NewLine +
+                    message: "Windows PowerShell is in non-interactive mode. Read and Prompt functionality is not available." + Environment.NewLine +
                              "at <ScriptBlock>, <No file>: line 1"));
         }
 
