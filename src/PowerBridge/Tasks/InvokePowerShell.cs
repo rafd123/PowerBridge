@@ -12,7 +12,7 @@ namespace PowerBridge.Tasks
 
         public override bool Execute()
         {
-            Execute(Expression, new TaskLog(Log));
+            Execute(Expression, new BuildTaskLog(Log));
 
             return !Log.HasLoggedErrors;
         }

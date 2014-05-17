@@ -23,11 +23,11 @@ namespace PowerBridge.Internal
             string message);
     }
 
-    internal sealed class TaskLog : IBuildTaskLog
+    internal sealed class BuildTaskLog : IBuildTaskLog
     {
         private readonly TaskLoggingHelper _taskLoggingHelper;
 
-        public TaskLog(TaskLoggingHelper taskLoggingHelper)
+        public BuildTaskLog(TaskLoggingHelper taskLoggingHelper)
         {
             _taskLoggingHelper = taskLoggingHelper;
         }
