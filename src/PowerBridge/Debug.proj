@@ -17,6 +17,6 @@
       ]]></Script>
     </PropertyGroup>
     <InvokePowerShell Expression="$(Script)" />
-    <InvokePowerShell Expression="&amp; '$(MSBuildThisFileDirectory)Debug.ps1'" />
+    <InvokePowerShell File="Debug.ps1" />
   </Target>
 </Project>

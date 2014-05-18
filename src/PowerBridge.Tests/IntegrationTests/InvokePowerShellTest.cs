@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -23,6 +24,19 @@ namespace PowerBridge.Tests.IntegrationTests
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogMessage("hello", MessageImportance.High));
+        }
+
+        [Test]
+        public void WhenInvokeWriteHostAsFile()
+        {
+            var buildTaskLog = new MockBuildTaskLog();
+
+            var parameters = new ExecuteParameters { File = "Write-Host 'hello'" };
+            InvokePowerShell.Execute(parameters, buildTaskLog);
+
+            buildTaskLog.AssertLogEntriesAre(
+                new LogErrorMessageOnly(message: "Processing File 'Write-Host 'hello'' failed because the file does not have a '.ps1' " +
+                                                 "extension. Specify a valid Windows PowerShell script file name, and then try again."));
         }
 
         [Test]
@@ -199,6 +213,38 @@ namespace PowerBridge.Tests.IntegrationTests
                     message: "Dead" + Environment.NewLine +
                              "at <ScriptBlock>, " + scriptFilePath + ": line 3" + Environment.NewLine +
                              "at <ScriptBlock>, <No file>: line 1"));
+        }
+
+        [Test]
+        public void WhenInvokingScriptFileAsFile()
+        {
+            var buildTaskLog = new MockBuildTaskLog();
+            var scriptFilePath = GetTestResourceFilePath("WhenInvokingScriptFile.ps1");
+
+            var parameters = new ExecuteParameters { File = scriptFilePath };
+            InvokePowerShell.Execute(parameters, buildTaskLog);
+
+            buildTaskLog.AssertLogEntriesAre(
+                new LogMessage("Alive", MessageImportance.High),
+                new LogWarning("Danger"),
+                new LogError(
+                    file: scriptFilePath,
+                    lineNumber: 3,
+                    message: "Dead" + Environment.NewLine +
+                             "at <ScriptBlock>, " + scriptFilePath + ": line 3"));
+        }
+
+        [Test]
+        public void WhenInvokingNonExistentScriptFileAsFile()
+        {
+            var buildTaskLog = new MockBuildTaskLog();
+
+            var parameters = new ExecuteParameters { File = "7d680d7c-3214-43c6-8eec-3b00a40ab91e.ps1" };
+            InvokePowerShell.Execute(parameters, buildTaskLog);
+
+            buildTaskLog.AssertLogEntriesAre(
+                new LogErrorMessageOnly(message: "The argument '7d680d7c-3214-43c6-8eec-3b00a40ab91e.ps1' to the File parameter " +
+                                                 "does not exist. Provide the path to an existing '.ps1' file as an argument to the File parameter."));
         }
 
         [Test]

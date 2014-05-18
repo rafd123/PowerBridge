@@ -1,4 +1,7 @@
+﻿using System;
+using System.IO;
 using System.Management.Automation.Runspaces;
+using Moq;
 using NUnit.Framework;
 using PowerBridge.Internal;
 using PowerBridge.Tests.Mocks;
@@ -22,7 +25,37 @@ namespace PowerBridge.Tests.UnitTests
         }
 
         [Test]
-        public void WhenExpressionIsNotSpecified()
+        public void WhenFileIsSpecified()
+        {
+            var taskLog = new MockBuildTaskLog();
+            var fileSystem = new Mock<IFileSystem>();
+            fileSystem.Setup(x => x.FileExists(It.IsAny<string>())).Returns((string path) => true);
+            fileSystem.Setup(x => x.GetFullPath(It.IsAny<string>())).Returns((string path) => path);
+
+            Command command;
+            var result = new ExecuteParameters(fileSystem: fileSystem.Object) { File = @"C:\test.ps1" }.TryGetCommand(taskLog, out command);
+
+            Assert.IsTrue(result);
+            taskLog.AssertLogEntriesAre(new LogEntry[0]);
+            Assert.IsFalse(command.IsScript);
+            Assert.AreEqual(@"C:\test.ps1", command.CommandText);
+        }
+
+        [Test]
+        public void WhenFileAndExpressionAreSpecified()
+        {
+            var taskLog = new MockBuildTaskLog();
+            Command command;
+            var result = new ExecuteParameters { File = @"C:\test.ps1", Expression = "test" }.TryGetCommand(taskLog, out command);
+
+            Assert.IsFalse(result);
+            taskLog.AssertLogEntriesAre(
+                new LogErrorMessageOnly("You cannot specify both the Expression and File parameters simultaneously."));
+            Assert.IsNull(command);
+        }
+
+        [Test]
+        public void WhenFileOrExpressionAreNotSpecified()
         {
             var taskLog = new MockBuildTaskLog();
             Command command;
@@ -30,8 +63,57 @@ namespace PowerBridge.Tests.UnitTests
 
             Assert.IsFalse(result);
             taskLog.AssertLogEntriesAre(
-                new LogErrorMessageOnly("The Expression parameter must be specified."));
+                new LogErrorMessageOnly("Either the Expression or File parameter must be specified."));
             Assert.IsNull(command);
+        }
+
+        [Test]
+        public void WhenNonPs1FileIsSpecified()
+        {
+            var taskLog = new MockBuildTaskLog();
+            Command command;
+            var result = new ExecuteParameters { File = @"C:\test.txt" }.TryGetCommand(taskLog, out command);
+
+            Assert.IsFalse(result);
+            taskLog.AssertLogEntriesAre(
+                new LogErrorMessageOnly(@"Processing File 'C:\test.txt' failed because the file does not have a '.ps1' " +
+                                        @"extension. Specify a valid Windows PowerShell script file name, and then try again."));
+            Assert.IsNull(command);
+        }
+
+        [Test]
+        public void WhenNonExistentFileIsSpecified()
+        {
+            var taskLog = new MockBuildTaskLog();
+            var fileSystem = new Mock<IFileSystem>();
+            fileSystem.Setup(x => x.FileExists(It.IsAny<string>())).Returns((string path) => false);
+            fileSystem.Setup(x => x.GetFullPath(It.IsAny<string>())).Returns((string path) => path);
+
+            Command command;
+            var result = new ExecuteParameters(fileSystem: fileSystem.Object) { File = @"C:\test.ps1" }.TryGetCommand(taskLog, out command);
+
+            Assert.IsFalse(result);
+            taskLog.AssertLogEntriesAre(
+                new LogErrorMessageOnly(@"The argument 'C:\test.ps1' to the File parameter does not exist. Provide the path " + 
+                                        @"to an existing '.ps1' file as an argument to the File parameter."));
+            Assert.IsNull(command);
+        }
+
+        [Test]
+        public void WhenRelativeFilePathIsSpecified()
+        {
+            var taskLog = new MockBuildTaskLog();
+            var fileSystem = new Mock<IFileSystem>();
+            fileSystem.Setup(x => x.FileExists(It.IsAny<string>())).Returns((string path) => true);
+            fileSystem.Setup(x => x.GetFullPath(It.IsAny<string>())).Returns((string path) => Path.Combine(@"C:\", path));
+
+            Command command;
+            var result = new ExecuteParameters(fileSystem: fileSystem.Object) { File = @"test.ps1" }.TryGetCommand(taskLog, out command);
+
+            Assert.IsTrue(result);
+            taskLog.AssertLogEntriesAre(new LogEntry[0]);
+            Assert.IsFalse(command.IsScript);
+            Assert.AreEqual(@"C:\test.ps1", command.CommandText);
         }
     }
 }

@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Internal\ExecuteParameters.cs" />
     <Compile Include="Internal\ErrorRecordExtensions.cs" />
+    <Compile Include="Internal\IFileSystem.cs" />
     <Compile Include="Internal\IPowerShellHostOutput.cs" />
     <Compile Include="Internal\IBuildTaskLog.cs" />
     <Compile Include="Internal\PowerShellHost.cs" />
