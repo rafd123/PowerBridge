@@ -8,17 +8,29 @@ namespace PowerBridge.Tasks
 {
     public class InvokePowerShell : AppDomainIsolatedTask
     {
-        public string Expression { get; set; }
+        private readonly ExecuteParameters _parameters = new ExecuteParameters();
+
+        public string Expression
+        {
+            get { return _parameters.Expression; }
+            set { _parameters.Expression = value; }
+        }
 
         public override bool Execute()
         {
-            Execute(Expression, new BuildTaskLog(Log));
+            Execute(_parameters, new BuildTaskLog(Log));
 
             return !Log.HasLoggedErrors;
         }
 
-        internal static void Execute(string expression, IBuildTaskLog taskLog)
+        internal static void Execute(ExecuteParameters parameters, IBuildTaskLog taskLog)
         {
+            Command command;
+            if (!parameters.TryGetCommand(taskLog, out command))
+            {
+                return;
+            }
+
             Environment.SetEnvironmentVariable("PSExecutionPolicyPreference", "Bypass");
 
             using (var powerShellOutput = new PowerShellHostOutput(taskLog))
@@ -34,7 +46,7 @@ namespace PowerBridge.Tasks
                     };
 
                     runspace.Open();
-                    powerShell.AddScript(expression);
+                    powerShell.Commands.AddCommand(command);
 
                     try
                     {
@@ -49,8 +61,8 @@ namespace PowerBridge.Tasks
 
                         powerShellOutput.WriteError(e.ErrorRecord);
                     }
-                }                
-            }            
+                }
+            }                        
         }
     }
 }

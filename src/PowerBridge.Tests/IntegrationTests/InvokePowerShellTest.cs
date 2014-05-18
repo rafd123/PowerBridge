@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using Microsoft.Build.Framework;
 using NUnit.Framework;
+using PowerBridge.Internal;
 using PowerBridge.Tasks;
 using PowerBridge.Tests.Mocks;
 
@@ -13,55 +14,60 @@ namespace PowerBridge.Tests.IntegrationTests
     public class InvokePowerShellTest
     {
         [Test]
-        public void WhenInvokingInlineWriteHost()
+        public void WhenInvokeWriteHostAsExpression()
         {
             var buildTaskLog = new MockBuildTaskLog();
 
-            InvokePowerShell.Execute("Write-Host 'hello'", buildTaskLog);
+            var parameters = new ExecuteParameters { Expression = "Write-Host 'hello'" };
+            InvokePowerShell.Execute(parameters, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogMessage("hello", MessageImportance.High));
         }
 
         [Test]
-        public void WhenInvokingInlineWriteHostNoNewLine()
+        public void WhenInvokeWriteHostNoNewLineAsExpression()
         {
             var buildTaskLog = new MockBuildTaskLog();
 
-            InvokePowerShell.Execute("Write-Host 'hello' -NoNewLine", buildTaskLog);
+            var parameters = new ExecuteParameters { Expression = "Write-Host 'hello' -NoNewLine" };
+            InvokePowerShell.Execute(parameters, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogMessage("hello", MessageImportance.High));
         }
 
         [Test]
-        public void WhenInvokingInlineWriteWarning()
+        public void WhenInvokeWriteWarningAsExpression()
         {
             var buildTaskLog = new MockBuildTaskLog();
 
-            InvokePowerShell.Execute("Write-Warning 'hello'", buildTaskLog);
+            var parameters = new ExecuteParameters { Expression = "Write-Warning 'hello'" };
+            InvokePowerShell.Execute(parameters, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogWarning("hello"));
         }
 
         [Test]
-        public void WhenInvokingInlineWriteVerbose()
+        public void WhenInvokeWriteVerboseAsExpression()
         {
             var buildTaskLog = new MockBuildTaskLog();
 
-            InvokePowerShell.Execute("Write-Verbose 'hello' -Verbose", buildTaskLog);
+            var parameters = new ExecuteParameters { Expression = "Write-Verbose 'hello' -Verbose" };
+            InvokePowerShell.Execute(parameters, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogMessage("hello", MessageImportance.Low));
         }
 
         [Test]
-        public void WhenInvokingInlineWriteDebug()
+        public void WhenInvokeWriteDebugAsExpression()
         {
             var buildTaskLog = new MockBuildTaskLog();
 
-            InvokePowerShell.Execute("Write-Debug 'hello' -Debug", buildTaskLog);
+            var parameters = new ExecuteParameters { Expression = "Write-Debug 'hello' -Debug" };
+            InvokePowerShell.Execute(parameters, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogMessage("hello", MessageImportance.Low),
@@ -73,11 +79,12 @@ namespace PowerBridge.Tests.IntegrationTests
         }
 
         [Test]
-        public void WhenInvokingInlineReadHost()
+        public void WhenInvokeReadHostAsExpression()
         {
             var buildTaskLog = new MockBuildTaskLog();
 
-            InvokePowerShell.Execute("Read-Host", buildTaskLog);
+            var parameters = new ExecuteParameters { Expression = "Read-Host" };
+            InvokePowerShell.Execute(parameters, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogError(
@@ -88,11 +95,12 @@ namespace PowerBridge.Tests.IntegrationTests
         }
 
         [Test]
-        public void WhenInvokingInlineReadHostAsSecureString()
+        public void WhenInvokeReadHostAsSecureStringAsExpression()
         {
             var buildTaskLog = new MockBuildTaskLog();
 
-            InvokePowerShell.Execute("Read-Host -AsSecureString", buildTaskLog);
+            var parameters = new ExecuteParameters { Expression = "Read-Host -AsSecureString" };
+            InvokePowerShell.Execute(parameters, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogError(
@@ -103,11 +111,12 @@ namespace PowerBridge.Tests.IntegrationTests
         }
 
         [Test]
-        public void WhenInvokingInlineGetCredential()
+        public void WhenInvokeGetCredentialAsExpression()
         {
             var buildTaskLog = new MockBuildTaskLog();
 
-            InvokePowerShell.Execute("Get-Credential", buildTaskLog);
+            var parameters = new ExecuteParameters { Expression = "Get-Credential" };
+            InvokePowerShell.Execute(parameters, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogError(
@@ -118,11 +127,12 @@ namespace PowerBridge.Tests.IntegrationTests
         }
 
         [Test]
-        public void WhenInvokingInlineWriteError()
+        public void WhenInvokeWriteErrorAsExpression()
         {
             var buildTaskLog = new MockBuildTaskLog();
 
-            InvokePowerShell.Execute("Write-Error 'hello'", buildTaskLog);
+            var parameters = new ExecuteParameters { Expression = "Write-Error 'hello'" };
+            InvokePowerShell.Execute(parameters, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogError(
@@ -133,11 +143,12 @@ namespace PowerBridge.Tests.IntegrationTests
         }
         
         [Test]
-        public void WhenInvokingInlineWriteErrorWithExplicitFilenameAndLine()
+        public void WhenInvokeWriteErrorWithExplicitFilenameAndLineAsExpression()
         {
             var buildTaskLog = new MockBuildTaskLog();
 
-            InvokePowerShell.Execute(@"Write-Error 'c:\foo\bar.txt(123) : This is a test'", buildTaskLog);
+            var parameters = new ExecuteParameters { Expression = @"Write-Error 'c:\foo\bar.txt(123) : This is a test'" };
+            InvokePowerShell.Execute(parameters, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogError(
@@ -149,11 +160,12 @@ namespace PowerBridge.Tests.IntegrationTests
         }
 
         [Test]
-        public void WhenInvokingInlineWriteErrorWithExplicitFilenameLineAndColumn()
+        public void WhenInvokeWriteErrorWithExplicitFilenameLineAndColumnAsExpression()
         {
             var buildTaskLog = new MockBuildTaskLog();
 
-            InvokePowerShell.Execute(@"Write-Error 'c:\foo\bar.txt(123,456) : This is a test'", buildTaskLog);
+            var parameters = new ExecuteParameters { Expression = @"Write-Error 'c:\foo\bar.txt(123,456) : This is a test'" };
+            InvokePowerShell.Execute(parameters, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogError(
@@ -166,7 +178,7 @@ namespace PowerBridge.Tests.IntegrationTests
         }   
 
         [Test]
-        public void WhenInvokingScriptFile()
+        public void WhenInvokingScriptFileAsExpression()
         {
             var buildTaskLog = new MockBuildTaskLog();
             var scriptFilePath = GetTestResourceFilePath("WhenInvokingScriptFile.ps1");
@@ -175,7 +187,8 @@ namespace PowerBridge.Tests.IntegrationTests
                 "& \"{0}\"",
                 scriptFilePath);
 
-            InvokePowerShell.Execute(script, buildTaskLog);
+            var parameters = new ExecuteParameters { Expression = script };
+            InvokePowerShell.Execute(parameters, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogMessage("Alive", MessageImportance.High),
@@ -189,7 +202,7 @@ namespace PowerBridge.Tests.IntegrationTests
         }
 
         [Test]
-        public void WhenInvokingComplexInlineScript()
+        public void WhenInvokingComplexInlineScriptAsExpression()
         {
             var buildTaskLog = new MockBuildTaskLog();
 
@@ -203,7 +216,8 @@ Write-Host 'hello'; foo
 
 Write-Host 'goodbye'
 ";
-            InvokePowerShell.Execute(script, buildTaskLog);
+            var parameters = new ExecuteParameters { Expression = script };
+            InvokePowerShell.Execute(parameters, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogMessage("hello", MessageImportance.High),
