@@ -49,12 +49,18 @@
     <Reference Include="System.Management.Automation" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Internal\ExecuteParameters.cs" />
     <Compile Include="Internal\ErrorRecordExtensions.cs" />
     <Compile Include="Internal\IFileSystem.cs" />
     <Compile Include="Internal\IPowerShellHostOutput.cs" />
     <Compile Include="Internal\IBuildTaskLog.cs" />
     <Compile Include="Internal\PowerShellHost.cs" />
+    <Compile Include="Internal\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Tasks\InvokePowerShell.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -67,6 +73,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="PowerBridge.nuspec" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Internal\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="CustomDictionary.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

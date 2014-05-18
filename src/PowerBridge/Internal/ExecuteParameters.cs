@@ -40,7 +40,6 @@ namespace PowerBridge.Internal
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "PowerBridge.Internal.IBuildTaskLog.LogError(System.String)")]
         public bool TryGetCommand(IBuildTaskLog taskLog, out Command command)
         {
             if (taskLog == null)
@@ -52,7 +51,7 @@ namespace PowerBridge.Internal
 
             if (_expressionSpecified && _fileSpecifed)
             {
-                taskLog.LogError("You cannot specify both the Expression and File parameters simultaneously.");
+                taskLog.LogError(Resources.ExpressionAndFileParametersCannotBeUsedSimultaneously);
                 return false;
             }
 
@@ -67,7 +66,7 @@ namespace PowerBridge.Internal
                 if (!_file.EndsWith(".ps1", StringComparison.OrdinalIgnoreCase))
                 {
                     var error = string.Format(CultureInfo.CurrentCulture,
-                        "Processing File '{0}' failed because the file does not have a '.ps1' extension. Specify a valid Windows PowerShell script file name, and then try again.",
+                        Resources.PowerShellScriptFileMustBeSpecifiedFormat,
                         _file);
 
                     taskLog.LogError(error);
@@ -78,7 +77,7 @@ namespace PowerBridge.Internal
                 if (!_fileSystem.FileExists(filePath))
                 {
                     var error = string.Format(CultureInfo.CurrentCulture,
-                        "The argument '{0}' to the File parameter does not exist. Provide the path to an existing '.ps1' file as an argument to the File parameter.",
+                        Resources.PowerShellScriptFileDoesNotExistFormat,
                         _file);
 
                     taskLog.LogError(error);
@@ -89,7 +88,7 @@ namespace PowerBridge.Internal
                 return true;
             }
 
-            taskLog.LogError("Either the Expression or File parameter must be specified.");
+            taskLog.LogError(Resources.ExpressionOrFileParameterMustBeSpecified);
             return false;
         }
     }

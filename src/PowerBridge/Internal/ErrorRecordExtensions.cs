@@ -44,7 +44,6 @@ namespace PowerBridge.Internal
                 columnNumber: 0);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "PowerBridge.Internal.ErrorRecordInfo.#ctor(System.String,System.String,System.Int32,System.Int32)")]
         private static ErrorRecordInfo GetErrorInfoFromMessage(ErrorRecord errorRecord)
         {
             // If the error message conforms to the perscribed custom build step error formatting
@@ -67,7 +66,7 @@ namespace PowerBridge.Internal
             }
 
             var message = match.Groups["message"].Value + Environment.NewLine +
-                          string.Format(CultureInfo.CurrentCulture, "at {0}: line {1}", file, lineNumber) + Environment.NewLine +
+                          string.Format(CultureInfo.CurrentCulture, Resources.CustomFileLineNumberFormat, file, lineNumber) + Environment.NewLine +
                           errorRecord.ScriptStackTrace;
 
             return new ErrorRecordInfo(

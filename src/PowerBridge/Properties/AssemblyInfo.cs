@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Resources;
 
 [assembly: CLSCompliant(true)]
 [assembly: ComVisible(false)]
@@ -13,7 +14,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyright("Copyright © Rafael Dowling Goodman 2014")]
 
 [assembly: AssemblyVersion("1.1.*")]
+[assembly: NeutralResourcesLanguageAttribute("en-US")]
 
 [assembly: InternalsVisibleTo("PowerBridge.Tests")]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
-
