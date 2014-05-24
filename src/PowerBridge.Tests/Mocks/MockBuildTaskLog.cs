@@ -24,7 +24,6 @@ namespace PowerBridge.Tests.Mocks
                 var actualEntry = _actualEntries[i];
                 expectedEntry.AssertIsEqual(actualEntry);
             }
-
         }
 
         public void LogMessage(MessageImportance messageImportance, string message)
@@ -32,28 +31,42 @@ namespace PowerBridge.Tests.Mocks
             _actualEntries.Add(new LogMessage(message, messageImportance));
         }
 
-        public void LogWarning(string message)
+        public void LogWarning(
+            string message,
+            string subcategory = null,
+            string warningCode = null,
+            string helpKeyword = null,
+            string file = null,
+            int lineNumber = 0,
+            int columnNumber = 0,
+            int endLineNumber = 0,
+            int endColumnNumber = 0)
         {
-            _actualEntries.Add(new LogWarning(message));
-        }
-
-        public void LogError(string message)
-        {
-            _actualEntries.Add(new LogErrorMessageOnly(message));
+            _actualEntries.Add(new LogWarning(
+                message,
+                subcategory,
+                warningCode,
+                helpKeyword,
+                file,
+                lineNumber,
+                columnNumber,
+                endLineNumber,
+                endColumnNumber));
         }
 
         public void LogError(
-            string subcategory,
-            string errorCode,
-            string helpKeyword,
-            string file,
-            int lineNumber,
-            int columnNumber,
-            int endLineNumber,
-            int endColumnNumber,
-            string message)
+            string message,
+            string subcategory = null,
+            string errorCode = null,
+            string helpKeyword = null,
+            string file = null,
+            int lineNumber = 0,
+            int columnNumber = 0,
+            int endLineNumber = 0,
+            int endColumnNumber = 0)
         {
             _actualEntries.Add(new LogError(
+                message,
                 subcategory,
                 errorCode,
                 helpKeyword,
@@ -61,8 +74,7 @@ namespace PowerBridge.Tests.Mocks
                 lineNumber,
                 columnNumber,
                 endLineNumber,
-                endColumnNumber,
-                message));
+                endColumnNumber));
         }
     }
 
@@ -137,33 +149,8 @@ namespace PowerBridge.Tests.Mocks
 
     public sealed class LogWarning : LogEntry<LogWarning>
     {
-        public LogWarning(string message)
-            : base(message)
-        {
-        }
-
-        protected override void AssertIsEqual(LogWarning actualEntry)
-        {
-            // no-op
-        }
-    }
-
-    public sealed class LogErrorMessageOnly : LogEntry<LogErrorMessageOnly>
-    {
-        public LogErrorMessageOnly(string message)
-            : base(message)
-        {
-        }
-
-        protected override void AssertIsEqual(LogErrorMessageOnly actualEntry)
-        {
-            // no-op
-        }
-    }
-
-    public sealed class LogError : LogEntry<LogError>
-    {
-        public LogError(
+        public LogWarning(
+            string message,
             string subcategory = null,
             string errorCode = null,
             string helpKeyword = null,
@@ -171,8 +158,60 @@ namespace PowerBridge.Tests.Mocks
             int lineNumber = 0,
             int columnNumber = 0,
             int endLineNumber = 0,
-            int endColumnNumber = 0,
-            string message = null)
+            int endColumnNumber = 0)
+            : base(message)
+        {
+            Subcategory = subcategory;
+            ErrorCode = errorCode;
+            HelpKeyword = helpKeyword;
+            File = file;
+            LineNumber = lineNumber;
+            ColumnNumber = columnNumber;
+            EndLineNumber = endLineNumber;
+            EndColumnNumber = endColumnNumber;
+        }
+
+        public string Subcategory { get; private set; }
+
+        public string ErrorCode { get; private set; }
+
+        public string HelpKeyword { get; private set; }
+
+        public string File { get; private set; }
+
+        public int LineNumber { get; private set; }
+
+        public int ColumnNumber { get; private set; }
+
+        public int EndLineNumber { get; private set; }
+
+        public int EndColumnNumber { get; private set; }
+
+        protected override void AssertIsEqual(LogWarning actualEntry)
+        {
+            Assert.AreEqual(Subcategory, actualEntry.Subcategory);
+            Assert.AreEqual(ErrorCode, actualEntry.ErrorCode);
+            Assert.AreEqual(HelpKeyword, actualEntry.HelpKeyword);
+            Assert.AreEqual(File, actualEntry.File);
+            Assert.AreEqual(LineNumber, actualEntry.LineNumber);
+            Assert.AreEqual(ColumnNumber, actualEntry.ColumnNumber);
+            Assert.AreEqual(EndLineNumber, actualEntry.EndLineNumber);
+            Assert.AreEqual(EndColumnNumber, actualEntry.EndColumnNumber);
+        }
+    }
+
+    public sealed class LogError : LogEntry<LogError>
+    {
+        public LogError(
+            string message,
+            string subcategory = null,
+            string errorCode = null,
+            string helpKeyword = null,
+            string file = null,
+            int lineNumber = 0,
+            int columnNumber = 0,
+            int endLineNumber = 0,
+            int endColumnNumber = 0)
             : base(message)
         {
             Subcategory = subcategory;

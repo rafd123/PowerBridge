@@ -62,12 +62,34 @@ namespace PowerBridge.Internal
 
         public void WriteWarningLine(string value)
         {
-            _log.LogWarning(value);
+            var info = LogEntryInfo.FromMessage(value);
+
+            _log.LogWarning(
+                subcategory: null,
+                warningCode: null,
+                helpKeyword: null,
+                file: info.File,
+                lineNumber: info.LineNumber,
+                columnNumber: info.ColumnNumber,
+                endLineNumber: 0,
+                endColumnNumber: 0,
+                message: info.Message);
         }
 
         public void WriteErrorLine(string value)
         {
-            _log.LogError(value);
+            var info = LogEntryInfo.FromMessage(value);
+
+            _log.LogError(
+                subcategory: null,
+                errorCode: null,
+                helpKeyword: null,
+                file: info.File,
+                lineNumber: info.LineNumber,
+                columnNumber: info.ColumnNumber,
+                endLineNumber: 0,
+                endColumnNumber: 0,
+                message: info.Message);
         }
 
         public void WriteError(ErrorRecord errorRecord)

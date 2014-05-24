@@ -35,8 +35,8 @@ namespace PowerBridge.Tests.IntegrationTests
             InvokePowerShell.Execute(parameters, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
-                new LogErrorMessageOnly(message: "Processing File 'Write-Host 'hello'' failed because the file does not have a '.ps1' " +
-                                                 "extension. Specify a valid Windows PowerShell script file name, and then try again."));
+                new LogError(message: "Processing File 'Write-Host 'hello'' failed because the file does not have a '.ps1' " +
+                                      "extension. Specify a valid Windows PowerShell script file name, and then try again."));
         }
 
         [Test]
@@ -157,6 +157,36 @@ namespace PowerBridge.Tests.IntegrationTests
         }
         
         [Test]
+        public void WhenInvokeWriteWarningWithExplicitFilenameAndLineAsExpression()
+        {
+            var buildTaskLog = new MockBuildTaskLog();
+
+            var parameters = new ExecuteParameters { Expression = @"Write-Warning 'c:\foo\bar.txt(123) : This is a test'" };
+            InvokePowerShell.Execute(parameters, buildTaskLog);
+
+            buildTaskLog.AssertLogEntriesAre(
+                new LogWarning(
+                    file: @"c:\foo\bar.txt",
+                    lineNumber: 123,
+                    message: @"This is a test"));
+        }
+
+        [Test]
+        public void WhenInvokeWriteWarningWithExplicitFilenameLineAndColumnAsExpression()
+        {
+            var buildTaskLog = new MockBuildTaskLog();
+
+            var parameters = new ExecuteParameters { Expression = @"Write-Warning 'c:\foo\bar.txt(123,456) : This is a test'" };
+            InvokePowerShell.Execute(parameters, buildTaskLog);
+
+            buildTaskLog.AssertLogEntriesAre(
+                new LogWarning(
+                    file: @"c:\foo\bar.txt",
+                    lineNumber: 123,
+                    columnNumber: 456,
+                    message: @"This is a test"));
+        }
+
         public void WhenInvokeWriteErrorWithExplicitFilenameAndLineAsExpression()
         {
             var buildTaskLog = new MockBuildTaskLog();
@@ -189,7 +219,7 @@ namespace PowerBridge.Tests.IntegrationTests
                     message: @"This is a test" + Environment.NewLine +
                              @"at c:\foo\bar.txt: line 123" + Environment.NewLine +
                              @"at <ScriptBlock>, <No file>: line 1"));
-        }   
+        } 
 
         [Test]
         public void WhenInvokingScriptFileAsExpression()
@@ -243,8 +273,8 @@ namespace PowerBridge.Tests.IntegrationTests
             InvokePowerShell.Execute(parameters, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
-                new LogErrorMessageOnly(message: "The argument '7d680d7c-3214-43c6-8eec-3b00a40ab91e.ps1' to the File parameter " +
-                                                 "does not exist. Provide the path to an existing '.ps1' file as an argument to the File parameter."));
+                new LogError(message: "The argument '7d680d7c-3214-43c6-8eec-3b00a40ab91e.ps1' to the File parameter " +
+                                      "does not exist. Provide the path to an existing '.ps1' file as an argument to the File parameter."));
         }
 
         [Test]

@@ -50,7 +50,7 @@ namespace PowerBridge.Tests.UnitTests
 
             Assert.IsFalse(result);
             taskLog.AssertLogEntriesAre(
-                new LogErrorMessageOnly("You cannot specify both the Expression and File parameters simultaneously."));
+                new LogError("You cannot specify both the Expression and File parameters simultaneously."));
             Assert.IsNull(command);
         }
 
@@ -63,7 +63,7 @@ namespace PowerBridge.Tests.UnitTests
 
             Assert.IsFalse(result);
             taskLog.AssertLogEntriesAre(
-                new LogErrorMessageOnly("Either the Expression or File parameter must be specified."));
+                new LogError("Either the Expression or File parameter must be specified."));
             Assert.IsNull(command);
         }
 
@@ -76,8 +76,8 @@ namespace PowerBridge.Tests.UnitTests
 
             Assert.IsFalse(result);
             taskLog.AssertLogEntriesAre(
-                new LogErrorMessageOnly(@"Processing File 'C:\test.txt' failed because the file does not have a '.ps1' " +
-                                        @"extension. Specify a valid Windows PowerShell script file name, and then try again."));
+                new LogError(@"Processing File 'C:\test.txt' failed because the file does not have a '.ps1' " +
+                             @"extension. Specify a valid Windows PowerShell script file name, and then try again."));
             Assert.IsNull(command);
         }
 
@@ -94,8 +94,8 @@ namespace PowerBridge.Tests.UnitTests
 
             Assert.IsFalse(result);
             taskLog.AssertLogEntriesAre(
-                new LogErrorMessageOnly(@"The argument 'C:\test.ps1' to the File parameter does not exist. Provide the path " + 
-                                        @"to an existing '.ps1' file as an argument to the File parameter."));
+                new LogError(@"The argument 'C:\test.ps1' to the File parameter does not exist. Provide the path " + 
+                             @"to an existing '.ps1' file as an argument to the File parameter."));
             Assert.IsNull(command);
         }
 
