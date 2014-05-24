@@ -13,7 +13,7 @@ using System.Resources;
 [assembly: AssemblyProduct("PowerBridge")]
 [assembly: AssemblyCopyright("Copyright © Rafael Dowling Goodman 2014")]
 
-[assembly: AssemblyVersion("1.1.*")]
+[assembly: AssemblyVersion("1.2.*")]
 [assembly: NeutralResourcesLanguageAttribute("en-US")]
 
 [assembly: InternalsVisibleTo("PowerBridge.Tests")]
