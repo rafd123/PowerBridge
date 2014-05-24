@@ -41,8 +41,14 @@ namespace PowerBridge.Internal
             // contain the information where the error was thrown but
             // rather what call was made that eventually let to the error.
             // Nonetheless, let's use it as a fallback.
-            var file = errorRecord.InvocationInfo.ScriptName;
-            var lineNumber = errorRecord.InvocationInfo.ScriptLineNumber;
+            string file = null;
+            var lineNumber = 0;
+            if (errorRecord.InvocationInfo != null)
+            {
+                file = errorRecord.InvocationInfo.ScriptName;
+                lineNumber = errorRecord.InvocationInfo.ScriptLineNumber;                
+            }
+
             var message = errorRecord + Environment.NewLine + errorRecord.ScriptStackTrace;
 
             return new LogEntryInfo(
@@ -88,6 +94,11 @@ namespace PowerBridge.Internal
 
         private static LogEntryInfo GetLogEntryInfoFromScriptStackTrace(ErrorRecord errorRecord)
         {
+            if (string.IsNullOrEmpty(errorRecord.ScriptStackTrace))
+            {
+                return null;
+            }
+
             // Ideally, we'd be able to use a System.Management.Automation.CallStackFrame
             // objects in order to determine where the error was thrown, however the
             // ErrorRecord object doesn't expose them. As a result, we have to resort
