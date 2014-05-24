@@ -25,11 +25,13 @@ namespace PowerBridge.Internal
     internal sealed class PowerShellHostOutput : IPowerShellHostOutput
     {
         private readonly IBuildTaskLog _log;
+        private readonly IPowerShellCallStackProvider _callStackProvider;
         private readonly StringBuilder _writeBuffer = new StringBuilder();
 
-        public PowerShellHostOutput(IBuildTaskLog log)
+        public PowerShellHostOutput(IBuildTaskLog log, IPowerShellCallStackProvider callStackProvider)
         {
             _log = log;
+            _callStackProvider = callStackProvider;
         }
 
         public void WriteDebugLine(string message)
@@ -62,7 +64,8 @@ namespace PowerBridge.Internal
 
         public void WriteWarningLine(string value)
         {
-            var info = LogEntryInfo.FromMessage(value);
+            var currentCallStackFrame = _callStackProvider.GetCurrentCallStackFrame();
+            var info = LogEntryInfo.FromMessage(value, currentCallStackFrame);
 
             _log.LogWarning(
                 subcategory: null,
@@ -78,7 +81,8 @@ namespace PowerBridge.Internal
 
         public void WriteErrorLine(string value)
         {
-            var info = LogEntryInfo.FromMessage(value);
+            var currentCallStackFrame = _callStackProvider.GetCurrentCallStackFrame();
+            var info = LogEntryInfo.FromMessage(value, currentCallStackFrame);
 
             _log.LogError(
                 subcategory: null,

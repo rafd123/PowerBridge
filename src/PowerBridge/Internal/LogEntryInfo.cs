@@ -52,27 +52,38 @@ namespace PowerBridge.Internal
                 columnNumber: 0);
         }
 
-        public static LogEntryInfo FromMessage(string message)
+        public static LogEntryInfo FromMessage(string message, CallStackFrame callStackFrame = null)
         {
             string messageWithoutLineInfo;
             string file;
             int lineNumber;
             int columnNumber;
 
-            if (!TryGetLineInfoFromMessages(message, out messageWithoutLineInfo, out file, out lineNumber, out columnNumber))
+            if (TryGetLineInfoFromMessages(message, out messageWithoutLineInfo, out file, out lineNumber, out columnNumber))
+            {
+                return new LogEntryInfo(
+                    message: messageWithoutLineInfo,
+                    file: file,
+                    lineNumber: lineNumber,
+                    columnNumber: columnNumber);
+            }
+
+            if (callStackFrame != null)
             {
                 return new LogEntryInfo(
                     message: message,
-                    file: null,
-                    lineNumber: 0,
+                    file: callStackFrame.ScriptName,
+                    lineNumber: string.IsNullOrEmpty(callStackFrame.ScriptName) ? 0 : callStackFrame.ScriptLineNumber,
                     columnNumber: 0);
             }
 
             return new LogEntryInfo(
-                message: messageWithoutLineInfo,
-                file: file,
-                lineNumber: lineNumber,
-                columnNumber: columnNumber);
+                message: message,
+                file: null,
+                lineNumber: 0,
+                columnNumber: 0);
+
+
         }
 
         private static LogEntryInfo GetLogEntryInfoFromScriptStackTrace(ErrorRecord errorRecord)

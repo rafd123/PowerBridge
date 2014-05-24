@@ -39,11 +39,11 @@ namespace PowerBridge.Tasks
 
             Environment.SetEnvironmentVariable("PSExecutionPolicyPreference", "Bypass");
 
-            using (var powerShellOutput = new PowerShellHostOutput(taskLog))
+            using (var powerShell = PowerShell.Create())
+            using (var powerShellOutput = new PowerShellHostOutput(taskLog, new PowerShellCallStackProvider(powerShell)))
             {
                 var host = new PowerShellHost(powerShellOutput);
                 using (var runspace = RunspaceFactory.CreateRunspace(host))
-                using (var powerShell = PowerShell.Create())
                 {
                     powerShell.Runspace = runspace;
                     powerShell.Streams.Error.DataAdded += (sender, args) =>
@@ -66,9 +66,9 @@ namespace PowerBridge.Tasks
                         }
 
                         powerShellOutput.WriteError(e.ErrorRecord);
-                    }
+                    }                    
                 }
-            }                        
+            }   
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -236,7 +235,10 @@ namespace PowerBridge.Tests.IntegrationTests
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogMessage("Alive", MessageImportance.High),
-                new LogWarning("Danger"),
+                new LogWarning(
+                    file: scriptFilePath,
+                    lineNumber: 2,
+                    message: "Danger"),
                 new LogError(
                     file: scriptFilePath,
                     lineNumber: 3,
@@ -256,7 +258,10 @@ namespace PowerBridge.Tests.IntegrationTests
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogMessage("Alive", MessageImportance.High),
-                new LogWarning("Danger"),
+                new LogWarning(
+                    file: scriptFilePath,
+                    lineNumber: 2,
+                    message: "Danger"),
                 new LogError(
                     file: scriptFilePath,
                     lineNumber: 3,
