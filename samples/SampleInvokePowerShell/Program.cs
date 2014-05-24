@@ -1,4 +1,4 @@
-﻿namespace SampleInvokePowerShellExpression
+﻿namespace SampleInvokePowerShell
 {
     class Program
     {

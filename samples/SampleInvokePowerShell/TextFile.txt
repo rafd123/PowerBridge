@@ -1,0 +1,3 @@
+﻿Using the standard custom-build formatted messages (see http://msdn.microsoft.com/en-us/library/yxkt8b26.aspx)
+will make you look -------------------------> here
+...and -------------------------------------> here
