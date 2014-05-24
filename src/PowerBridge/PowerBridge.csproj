@@ -50,8 +50,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Internal\LogEntryInfo.cs" />
     <Compile Include="Internal\ExecuteParameters.cs" />
-    <Compile Include="Internal\ErrorRecordExtensions.cs" />
     <Compile Include="Internal\IFileSystem.cs" />
     <Compile Include="Internal\IPowerShellHostOutput.cs" />
     <Compile Include="Internal\IBuildTaskLog.cs" />

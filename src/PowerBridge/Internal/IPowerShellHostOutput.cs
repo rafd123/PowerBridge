@@ -72,7 +72,7 @@ namespace PowerBridge.Internal
 
         public void WriteError(ErrorRecord errorRecord)
         {
-            var info = errorRecord.GetErrorInfo();
+            var info = LogEntryInfo.FromErrorRecord(errorRecord);
 
             _log.LogError(
                 subcategory: null,
