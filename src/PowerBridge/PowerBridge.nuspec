@@ -6,8 +6,8 @@
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
-    <iconUrl>https://raw.githubusercontent.com/PowerBridge/PowerBridge/master/images/icon.png</iconUrl>
-    <projectUrl>https://github.com/PowerBridge/PowerBridge/wiki</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/rafd123/PowerBridge/master/images/icon.png</iconUrl>
+    <projectUrl>https://github.com/rafd123/PowerBridge/wiki</projectUrl>
     <licenseUrl>https://raw.githubusercontent.com/PowerBridge/PowerBridge/master/LICENSE.txt</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
