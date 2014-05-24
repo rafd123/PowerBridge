@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Management.Automation.Runspaces;
+using System.Text;
 
 namespace PowerBridge.Internal
 {
@@ -12,6 +13,9 @@ namespace PowerBridge.Internal
 
         private string _file;
         private bool _fileSpecifed;
+
+        private string _arguments;
+        private bool _argumentsSpecified;
 
         public ExecuteParameters(IFileSystem fileSystem = null)
         {
@@ -40,6 +44,17 @@ namespace PowerBridge.Internal
             }
         }
 
+        public string Arguments
+        {
+            get { return _arguments; }
+
+            set
+            {
+                _arguments = value ?? string.Empty;
+                _argumentsSpecified = true;
+            }
+        }
+
         public bool TryGetCommand(IBuildTaskLog taskLog, out Command command)
         {
             if (taskLog == null)
@@ -57,6 +72,12 @@ namespace PowerBridge.Internal
 
             if (_expressionSpecified)
             {
+                if (_argumentsSpecified)
+                {
+                    taskLog.LogError(Resources.ArgumentParameterNotValidWithExpressionParameter);
+                    return false;
+                }
+
                 command = new Command(_expression, isScript: true);
                 return true;
             }
@@ -84,7 +105,17 @@ namespace PowerBridge.Internal
                     return false;
                 }
 
-                command = new Command(filePath, false);
+                var commandBuilder = new StringBuilder();
+                commandBuilder.Append("& '");
+                commandBuilder.Append(filePath);
+                commandBuilder.Append('\'');
+                if (_argumentsSpecified)
+                {
+                    commandBuilder.Append(' ');
+                    commandBuilder.Append(_arguments);
+                }
+
+                command = new Command(commandBuilder.ToString(), true);
                 return true;
             }
 

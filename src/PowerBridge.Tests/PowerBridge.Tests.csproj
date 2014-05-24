@@ -65,6 +65,7 @@
     <Compile Include="UnitTests\ExecuteParametersTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="IntegrationTests\InvokePowerShellTestResources\WhenInvokingScriptFileWithArguments.ps1" />
     <None Include="packages.config" />
     <None Include="IntegrationTests\InvokePowerShellTestResources\WhenInvokingScriptFile.ps1" />
   </ItemGroup>

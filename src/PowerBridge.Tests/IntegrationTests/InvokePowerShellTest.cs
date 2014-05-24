@@ -266,7 +266,33 @@ namespace PowerBridge.Tests.IntegrationTests
                     file: scriptFilePath,
                     lineNumber: 3,
                     message: "Dead" + Environment.NewLine +
-                             "at <ScriptBlock>, " + scriptFilePath + ": line 3"));
+                             "at <ScriptBlock>, " + scriptFilePath + ": line 3" + Environment.NewLine +
+                             "at <ScriptBlock>, <No file>: line 1"));
+        }
+
+        [Test]
+        public void WhenInvokingScriptFileWithArgumentsAsFile()
+        {
+            var buildTaskLog = new MockBuildTaskLog();
+            var scriptFilePath = GetTestResourceFilePath("WhenInvokingScriptFileWithArguments.ps1");
+
+            var parameters = new ExecuteParameters { File = scriptFilePath, Arguments = "-Arg1 foo -Arg2 bar"};
+            InvokePowerShell.Execute(parameters, buildTaskLog);
+
+            buildTaskLog.AssertLogEntriesAre(
+                new LogMessage("Arg1 = foo", MessageImportance.High),
+                new LogMessage("Arg2 = bar", MessageImportance.High),
+                new LogMessage("Alive", MessageImportance.High),
+                new LogWarning(
+                    file: scriptFilePath,
+                    lineNumber: 10,
+                    message: "Danger"),
+                new LogError(
+                    file: scriptFilePath,
+                    lineNumber: 11,
+                    message: "Dead" + Environment.NewLine +
+                             "at <ScriptBlock>, " + scriptFilePath + ": line 11" + Environment.NewLine +
+                             "at <ScriptBlock>, <No file>: line 1"));
         }
 
         [Test]

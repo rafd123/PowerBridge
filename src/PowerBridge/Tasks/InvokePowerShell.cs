@@ -22,6 +22,12 @@ namespace PowerBridge.Tasks
             set { _parameters.File = value; }
         }
 
+        public string Arguments
+        {
+            get { return _parameters.Arguments; }
+            set { _parameters.Arguments = value; }
+        }
+
         public override bool Execute()
         {
             Execute(_parameters, new BuildTaskLog(Log));
