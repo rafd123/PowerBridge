@@ -186,6 +186,7 @@ namespace PowerBridge.Tests.IntegrationTests
                     message: @"This is a test"));
         }
 
+        [Test]
         public void WhenInvokeWriteErrorWithExplicitFilenameAndLineAsExpression()
         {
             var buildTaskLog = new MockBuildTaskLog();
