@@ -219,7 +219,24 @@ namespace PowerBridge.Tests.IntegrationTests
                     message: @"This is a test" + Environment.NewLine +
                              @"at c:\foo\bar.txt: line 123" + Environment.NewLine +
                              @"at <ScriptBlock>, <No file>: line 1"));
-        } 
+        }
+
+        [Test]
+        public void WhenInvokeWriteErrorMultilineWithExplicitFilenameAndLineAsExpression()
+        {
+            var buildTaskLog = new MockBuildTaskLog();
+
+            var parameters = new ExecuteParameters { Expression = @"Write-Error ""c:\foo\bar.txt(123) : This is a test`nThis is a test""" };
+            InvokePowerShell.Execute(parameters, buildTaskLog);
+
+            buildTaskLog.AssertLogEntriesAre(
+                new LogError(
+                    file: @"c:\foo\bar.txt",
+                    lineNumber: 123,
+                    message: "This is a test\nThis is a test" + Environment.NewLine +
+                             @"at c:\foo\bar.txt: line 123" + Environment.NewLine +
+                             @"at <ScriptBlock>, <No file>: line 1"));
+        }
 
         [Test]
         public void WhenInvokingScriptFileAsExpression()

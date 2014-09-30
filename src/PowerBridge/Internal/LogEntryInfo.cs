@@ -103,7 +103,7 @@ namespace PowerBridge.Internal
             // objects in order to determine where the error was thrown, however the
             // ErrorRecord object doesn't expose them. As a result, we have to resort
             // to parsing the ErrorRecord.ScriptStackTrace.
-            var match = Regex.Match(errorRecord.ScriptStackTrace, @".*, (?<file>.+): line (?<line>[\d]+)");
+            var match = Match(errorRecord.ScriptStackTrace, @"^.*?, (?<file>.+?): line (?<line>[\d]+)");
             if (!match.Success)
             {
                 return null;
@@ -159,7 +159,7 @@ namespace PowerBridge.Internal
             // If the error message conforms to the perscribed custom build step error formatting
             // (see http://msdn.microsoft.com/en-us/library/yxkt8b26.aspx) let's use this information
             // for the file and line info since its more contextual
-            var match = Regex.Match(originalMessage, @"^(?<file>.+?)\((?<line>\d+)(,(?<column>\d+))?\) : (?<message>.*)");
+            var match = Match(originalMessage, @"^(?<file>.+?)\((?<line>\d+)(,(?<column>\d+))?\) : (?<message>.*)");
             if (!match.Success)
             {
                 return false;
@@ -177,6 +177,11 @@ namespace PowerBridge.Internal
             messageWithoutLineInfo = match.Groups["message"].Value;
 
             return true;
+        }
+
+        private static Match Match(string input, string pattern)
+        {
+            return Regex.Match(input, pattern, RegexOptions.Singleline);
         }
 
         public string Message { get; private set; }
