@@ -46,14 +46,29 @@ namespace PowerBridge.Internal
 
         public void Write(string message)
         {
-            if (message == "\n" && _writeBuffer.Length != 0)
+            var flushBuffer = false;
+
+            if (message.EndsWith("\r\n", StringComparison.Ordinal))
+            {
+                message = message.Substring(0, message.Length - 2);
+                flushBuffer = true;
+            }
+            else if (message.EndsWith("\n", StringComparison.Ordinal))
+            {
+                message = message.Substring(0, message.Length - 1);
+                flushBuffer = true;
+            }
+
+            if (!string.IsNullOrEmpty(message))
+            {
+                _writeBuffer.Append(message);
+            }
+
+            if (flushBuffer && _writeBuffer.Length != 0)
             {
                 _log.LogMessage(MessageImportance.High, _writeBuffer.ToString());
                 _writeBuffer.Clear();
-                return;
             }
-
-            _writeBuffer.Append(message);
         }
 
         public void WriteLine(string value)
