@@ -350,6 +350,52 @@ Write-Host 'goodbye'
                 new LogMessage("goodbye", MessageImportance.High));
         }
 
+        [Test]
+        public void WhenObjectsFallOffPipeline()
+        {
+            var buildTaskLog = new MockBuildTaskLog();
+
+            const string script = @"
+'hi'
+'there'
+1
+Write-Error boom
+@()
+@{ foo = 'bar' } | Format-Table -AutoSize
+";
+
+            var parameters = new ExecuteParameters { Expression = script };
+            InvokePowerShell.Execute(parameters, buildTaskLog);
+
+            buildTaskLog.AssertLogEntriesAre(
+                new LogMessage("hi", MessageImportance.High),
+                new LogMessage("there", MessageImportance.High),
+                new LogMessage("1", MessageImportance.High),
+                new LogError(
+                    file: "<No file>",
+                    lineNumber: 5,
+                    message: "boom" + Environment.NewLine + 
+                             "at <ScriptBlock>, <No file>: line 5"),
+                new LogMessage(messageImportance: MessageImportance.High, message: @"
+Name Value
+---- -----
+foo  bar  
+
+"));
+        }
+
+        [Test]
+        public void WhenInvokingCommandLineApp()
+        {
+            var buildTaskLog = new MockBuildTaskLog();
+
+            var parameters = new ExecuteParameters { Expression = "& cmd /c echo hi" };
+            InvokePowerShell.Execute(parameters, buildTaskLog);
+
+            buildTaskLog.AssertLogEntriesAre(
+                new LogMessage("hi", MessageImportance.High));
+        }
+
         private static string GetTestResourceFilePath(string testResource, [CallerFilePath] string sourceFilePath = "")
         {
             sourceFilePath = NormalizePath(sourceFilePath);

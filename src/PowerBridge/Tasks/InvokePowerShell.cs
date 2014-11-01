@@ -62,7 +62,8 @@ namespace PowerBridge.Tasks
 
                     try
                     {
-                        powerShell.Invoke();
+                        var output = new PowerShellOutputList(powerShellOutput, new PowerShellStringProvider(powerShell));
+                        powerShell.Invoke(null, output);
                     }
                     catch (RuntimeException e)
                     {
