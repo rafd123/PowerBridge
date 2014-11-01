@@ -16,5 +16,6 @@
   </metadata>
   <files>
     <file src="PowerBridge.props" target="build"/>
+    <file src="PowerBridge.targets" target="build"/>
   </files>  
 </package>

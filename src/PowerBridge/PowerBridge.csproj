@@ -73,6 +73,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Debug.ps1" />
+    <None Include="PowerBridge.targets" />
     <None Include="PowerBridge.props" />
   </ItemGroup>
   <ItemGroup>

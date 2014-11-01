@@ -1,0 +1,17 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <BuildDependsOn>
+      PowerBridgeBeforeBuild;
+      $(BuildDependsOn);
+      PowerBridgeAfterBuild
+    </BuildDependsOn>
+  </PropertyGroup>
+
+  <Target Name="PowerBridgeBeforeBuild" Condition="Exists('$(ProjectDir).BuildScripts\BeforeBuild.ps1')">
+    <InvokePowerShell File="$(ProjectDir).BuildScripts\BeforeBuild.ps1" />
+  </Target>
+
+  <Target Name="PowerBridgeAfterBuild" Condition="Exists('$(ProjectDir).BuildScripts\AfterBuild.ps1')">
+    <InvokePowerShell File="$(ProjectDir).BuildScripts\AfterBuild.ps1" />
+  </Target>
+</Project>

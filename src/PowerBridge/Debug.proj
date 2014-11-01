@@ -1,5 +1,6 @@
-﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="InvokePowerShellStuff">
   <Import Project="PowerBridge.props" />
+  <Import Project="PowerBridge.targets" />
   <Target Name="InvokePowerShellStuff">
     <PropertyGroup>
       <Script><![CDATA[
