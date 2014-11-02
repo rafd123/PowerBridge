@@ -31,11 +31,12 @@ namespace PowerBridge.Tests.IntegrationTests
             var buildTaskLog = new MockBuildTaskLog();
 
             var parameters = new ExecuteParameters { File = "Write-Host 'hello'" };
-            InvokePowerShell.Execute(parameters, buildTaskLog);
+            var exception = Assert.Throws<ArgumentException>(() => InvokePowerShell.Execute(parameters, buildTaskLog));
 
-            buildTaskLog.AssertLogEntriesAre(
-                new LogError(message: "Processing File 'Write-Host 'hello'' failed because the file does not have a '.ps1' " +
-                                      "extension. Specify a valid Windows PowerShell script file name, and then try again."));
+            Assert.AreEqual(
+                "Processing File 'Write-Host 'hello'' failed because the file does not have a '.ps1' " +
+                "extension. Specify a valid Windows PowerShell script file name, and then try again.",
+                exception.Message);
         }
 
         [Test]
@@ -319,11 +320,12 @@ namespace PowerBridge.Tests.IntegrationTests
             var buildTaskLog = new MockBuildTaskLog();
 
             var parameters = new ExecuteParameters { File = "7d680d7c-3214-43c6-8eec-3b00a40ab91e.ps1" };
-            InvokePowerShell.Execute(parameters, buildTaskLog);
+            var exception = Assert.Throws<ArgumentException>(() => InvokePowerShell.Execute(parameters, buildTaskLog));
 
-            buildTaskLog.AssertLogEntriesAre(
-                new LogError(message: "The argument '7d680d7c-3214-43c6-8eec-3b00a40ab91e.ps1' to the File parameter " +
-                                      "does not exist. Provide the path to an existing '.ps1' file as an argument to the File parameter."));
+            Assert.AreEqual(
+                "The argument '7d680d7c-3214-43c6-8eec-3b00a40ab91e.ps1' to the File parameter " +
+                "does not exist. Provide the path to an existing '.ps1' file as an argument to the File parameter.",
+                exception.Message);
         }
 
         [Test]

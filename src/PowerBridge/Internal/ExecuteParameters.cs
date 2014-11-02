@@ -55,31 +55,21 @@ namespace PowerBridge.Internal
             }
         }
 
-        public bool TryGetCommand(IBuildTaskLog taskLog, out Command command)
+        public Command GetCommand()
         {
-            if (taskLog == null)
-            {
-                throw new ArgumentNullException("taskLog");
-            }
-
-            command = null;
-
             if (_expressionSpecified && _fileSpecifed)
             {
-                taskLog.LogError(Resources.ExpressionAndFileParametersCannotBeUsedSimultaneously);
-                return false;
+                throw new ArgumentException(Resources.ExpressionAndFileParametersCannotBeUsedSimultaneously);
             }
 
             if (_expressionSpecified)
             {
                 if (_argumentsSpecified)
                 {
-                    taskLog.LogError(Resources.ArgumentParameterNotValidWithExpressionParameter);
-                    return false;
+                    throw new ArgumentException(Resources.ArgumentParameterNotValidWithExpressionParameter);
                 }
 
-                command = new Command(_expression, isScript: true);
-                return true;
+                return new Command(_expression, isScript: true);
             }
 
             if (_fileSpecifed)
@@ -90,8 +80,7 @@ namespace PowerBridge.Internal
                         Resources.PowerShellScriptFileMustBeSpecifiedFormat,
                         _file);
 
-                    taskLog.LogError(error);
-                    return false;
+                    throw new ArgumentException(error);
                 }
 
                 var filePath = _fileSystem.GetFullPath(_file);
@@ -101,8 +90,7 @@ namespace PowerBridge.Internal
                         Resources.PowerShellScriptFileDoesNotExistFormat,
                         _file);
 
-                    taskLog.LogError(error);
-                    return false;
+                    throw new ArgumentException(error);
                 }
 
                 var commandBuilder = new StringBuilder();
@@ -115,12 +103,10 @@ namespace PowerBridge.Internal
                     commandBuilder.Append(_arguments);
                 }
 
-                command = new Command(commandBuilder.ToString(), true);
-                return true;
+                return new Command(commandBuilder.ToString(), true);
             }
 
-            taskLog.LogError(Resources.ExpressionOrFileParameterMustBeSpecified);
-            return false;
+            throw new ArgumentException(Resources.ExpressionOrFileParameterMustBeSpecified);
         }
     }
 }

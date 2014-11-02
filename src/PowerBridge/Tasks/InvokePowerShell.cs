@@ -37,11 +37,7 @@ namespace PowerBridge.Tasks
 
         internal static void Execute(ExecuteParameters parameters, IBuildTaskLog taskLog)
         {
-            Command command;
-            if (!parameters.TryGetCommand(taskLog, out command))
-            {
-                return;
-            }
+            var command = parameters.GetCommand();
 
             Environment.SetEnvironmentVariable("PSExecutionPolicyPreference", "Bypass");
 
