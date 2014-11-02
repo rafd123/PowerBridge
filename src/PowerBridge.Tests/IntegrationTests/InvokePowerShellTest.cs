@@ -18,8 +18,8 @@ namespace PowerBridge.Tests.IntegrationTests
         {
             var buildTaskLog = new MockBuildTaskLog();
 
-            var parameters = new ExecuteParameters { Expression = "Write-Host 'hello'" };
-            InvokePowerShell.Execute(parameters, buildTaskLog);
+            var commandFactory = new CommandFactory { Expression = "Write-Host 'hello'" };
+            InvokePowerShell.Execute(commandFactory, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogMessage("hello", MessageImportance.High));
@@ -30,8 +30,8 @@ namespace PowerBridge.Tests.IntegrationTests
         {
             var buildTaskLog = new MockBuildTaskLog();
 
-            var parameters = new ExecuteParameters { File = "Write-Host 'hello'" };
-            var exception = Assert.Throws<ArgumentException>(() => InvokePowerShell.Execute(parameters, buildTaskLog));
+            var commandFactory = new CommandFactory { File = "Write-Host 'hello'" };
+            var exception = Assert.Throws<ArgumentException>(() => InvokePowerShell.Execute(commandFactory, buildTaskLog));
 
             Assert.AreEqual(
                 "Processing File 'Write-Host 'hello'' failed because the file does not have a '.ps1' " +
@@ -44,8 +44,8 @@ namespace PowerBridge.Tests.IntegrationTests
         {
             var buildTaskLog = new MockBuildTaskLog();
 
-            var parameters = new ExecuteParameters { Expression = "Write-Host 'hello' -NoNewLine" };
-            InvokePowerShell.Execute(parameters, buildTaskLog);
+            var commandFactory = new CommandFactory { Expression = "Write-Host 'hello' -NoNewLine" };
+            InvokePowerShell.Execute(commandFactory, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogMessage("hello", MessageImportance.High));
@@ -56,8 +56,8 @@ namespace PowerBridge.Tests.IntegrationTests
         {
             var buildTaskLog = new MockBuildTaskLog();
 
-            var parameters = new ExecuteParameters { Expression = "Write-Warning 'hello'" };
-            InvokePowerShell.Execute(parameters, buildTaskLog);
+            var commandFactory = new CommandFactory { Expression = "Write-Warning 'hello'" };
+            InvokePowerShell.Execute(commandFactory, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogWarning("hello"));
@@ -68,8 +68,8 @@ namespace PowerBridge.Tests.IntegrationTests
         {
             var buildTaskLog = new MockBuildTaskLog();
 
-            var parameters = new ExecuteParameters { Expression = "Write-Verbose 'hello' -Verbose" };
-            InvokePowerShell.Execute(parameters, buildTaskLog);
+            var commandFactory = new CommandFactory { Expression = "Write-Verbose 'hello' -Verbose" };
+            InvokePowerShell.Execute(commandFactory, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogMessage("hello", MessageImportance.Low));
@@ -80,8 +80,8 @@ namespace PowerBridge.Tests.IntegrationTests
         {
             var buildTaskLog = new MockBuildTaskLog();
 
-            var parameters = new ExecuteParameters { Expression = "Write-Debug 'hello' -Debug" };
-            InvokePowerShell.Execute(parameters, buildTaskLog);
+            var commandFactory = new CommandFactory { Expression = "Write-Debug 'hello' -Debug" };
+            InvokePowerShell.Execute(commandFactory, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogMessage("hello", MessageImportance.Low),
@@ -97,8 +97,8 @@ namespace PowerBridge.Tests.IntegrationTests
         {
             var buildTaskLog = new MockBuildTaskLog();
 
-            var parameters = new ExecuteParameters { Expression = "Read-Host" };
-            InvokePowerShell.Execute(parameters, buildTaskLog);
+            var commandFactory = new CommandFactory { Expression = "Read-Host" };
+            InvokePowerShell.Execute(commandFactory, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogError(
@@ -113,8 +113,8 @@ namespace PowerBridge.Tests.IntegrationTests
         {
             var buildTaskLog = new MockBuildTaskLog();
 
-            var parameters = new ExecuteParameters { Expression = "Read-Host -AsSecureString" };
-            InvokePowerShell.Execute(parameters, buildTaskLog);
+            var commandFactory = new CommandFactory { Expression = "Read-Host -AsSecureString" };
+            InvokePowerShell.Execute(commandFactory, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogError(
@@ -129,8 +129,8 @@ namespace PowerBridge.Tests.IntegrationTests
         {
             var buildTaskLog = new MockBuildTaskLog();
 
-            var parameters = new ExecuteParameters { Expression = "Get-Credential" };
-            InvokePowerShell.Execute(parameters, buildTaskLog);
+            var commandFactory = new CommandFactory { Expression = "Get-Credential" };
+            InvokePowerShell.Execute(commandFactory, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogError(
@@ -145,8 +145,8 @@ namespace PowerBridge.Tests.IntegrationTests
         {
             var buildTaskLog = new MockBuildTaskLog();
 
-            var parameters = new ExecuteParameters { Expression = "Write-Error 'hello'" };
-            InvokePowerShell.Execute(parameters, buildTaskLog);
+            var commandFactory = new CommandFactory { Expression = "Write-Error 'hello'" };
+            InvokePowerShell.Execute(commandFactory, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogError(
@@ -161,8 +161,8 @@ namespace PowerBridge.Tests.IntegrationTests
         {
             var buildTaskLog = new MockBuildTaskLog();
 
-            var parameters = new ExecuteParameters { Expression = @"Write-Warning 'c:\foo\bar.txt(123) : This is a test'" };
-            InvokePowerShell.Execute(parameters, buildTaskLog);
+            var commandFactory = new CommandFactory { Expression = @"Write-Warning 'c:\foo\bar.txt(123) : This is a test'" };
+            InvokePowerShell.Execute(commandFactory, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogWarning(
@@ -176,8 +176,8 @@ namespace PowerBridge.Tests.IntegrationTests
         {
             var buildTaskLog = new MockBuildTaskLog();
 
-            var parameters = new ExecuteParameters { Expression = @"Write-Warning 'c:\foo\bar.txt(123,456) : This is a test'" };
-            InvokePowerShell.Execute(parameters, buildTaskLog);
+            var commandFactory = new CommandFactory { Expression = @"Write-Warning 'c:\foo\bar.txt(123,456) : This is a test'" };
+            InvokePowerShell.Execute(commandFactory, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogWarning(
@@ -192,8 +192,8 @@ namespace PowerBridge.Tests.IntegrationTests
         {
             var buildTaskLog = new MockBuildTaskLog();
 
-            var parameters = new ExecuteParameters { Expression = @"Write-Error 'c:\foo\bar.txt(123) : This is a test'" };
-            InvokePowerShell.Execute(parameters, buildTaskLog);
+            var commandFactory = new CommandFactory { Expression = @"Write-Error 'c:\foo\bar.txt(123) : This is a test'" };
+            InvokePowerShell.Execute(commandFactory, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogError(
@@ -209,8 +209,8 @@ namespace PowerBridge.Tests.IntegrationTests
         {
             var buildTaskLog = new MockBuildTaskLog();
 
-            var parameters = new ExecuteParameters { Expression = @"Write-Error 'c:\foo\bar.txt(123,456) : This is a test'" };
-            InvokePowerShell.Execute(parameters, buildTaskLog);
+            var commandFactory = new CommandFactory { Expression = @"Write-Error 'c:\foo\bar.txt(123,456) : This is a test'" };
+            InvokePowerShell.Execute(commandFactory, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogError(
@@ -227,8 +227,8 @@ namespace PowerBridge.Tests.IntegrationTests
         {
             var buildTaskLog = new MockBuildTaskLog();
 
-            var parameters = new ExecuteParameters { Expression = @"Write-Error ""c:\foo\bar.txt(123) : This is a test`nThis is a test""" };
-            InvokePowerShell.Execute(parameters, buildTaskLog);
+            var commandFactory = new CommandFactory { Expression = @"Write-Error ""c:\foo\bar.txt(123) : This is a test`nThis is a test""" };
+            InvokePowerShell.Execute(commandFactory, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogError(
@@ -249,8 +249,8 @@ namespace PowerBridge.Tests.IntegrationTests
                 "& \"{0}\"",
                 scriptFilePath);
 
-            var parameters = new ExecuteParameters { Expression = script };
-            InvokePowerShell.Execute(parameters, buildTaskLog);
+            var commandFactory = new CommandFactory { Expression = script };
+            InvokePowerShell.Execute(commandFactory, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogMessage("Alive", MessageImportance.High),
@@ -272,8 +272,8 @@ namespace PowerBridge.Tests.IntegrationTests
             var buildTaskLog = new MockBuildTaskLog();
             var scriptFilePath = GetTestResourceFilePath("WhenInvokingScriptFile.ps1");
 
-            var parameters = new ExecuteParameters { File = scriptFilePath };
-            InvokePowerShell.Execute(parameters, buildTaskLog);
+            var commandFactory = new CommandFactory { File = scriptFilePath };
+            InvokePowerShell.Execute(commandFactory, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogMessage("Alive", MessageImportance.High),
@@ -295,8 +295,8 @@ namespace PowerBridge.Tests.IntegrationTests
             var buildTaskLog = new MockBuildTaskLog();
             var scriptFilePath = GetTestResourceFilePath("WhenInvokingScriptFileWithArguments.ps1");
 
-            var parameters = new ExecuteParameters { File = scriptFilePath, Arguments = "-Arg1 foo -Arg2 bar"};
-            InvokePowerShell.Execute(parameters, buildTaskLog);
+            var commandFactory = new CommandFactory { File = scriptFilePath, Arguments = "-Arg1 foo -Arg2 bar"};
+            InvokePowerShell.Execute(commandFactory, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogMessage("Arg1 = foo", MessageImportance.High),
@@ -319,8 +319,8 @@ namespace PowerBridge.Tests.IntegrationTests
         {
             var buildTaskLog = new MockBuildTaskLog();
 
-            var parameters = new ExecuteParameters { File = "7d680d7c-3214-43c6-8eec-3b00a40ab91e.ps1" };
-            var exception = Assert.Throws<ArgumentException>(() => InvokePowerShell.Execute(parameters, buildTaskLog));
+            var commandFactory = new CommandFactory { File = "7d680d7c-3214-43c6-8eec-3b00a40ab91e.ps1" };
+            var exception = Assert.Throws<ArgumentException>(() => InvokePowerShell.Execute(commandFactory, buildTaskLog));
 
             Assert.AreEqual(
                 "The argument '7d680d7c-3214-43c6-8eec-3b00a40ab91e.ps1' to the File parameter " +
@@ -343,8 +343,8 @@ Write-Host 'hello'; foo
 
 Write-Host 'goodbye'
 ";
-            var parameters = new ExecuteParameters { Expression = script };
-            InvokePowerShell.Execute(parameters, buildTaskLog);
+            var commandFactory = new CommandFactory { Expression = script };
+            InvokePowerShell.Execute(commandFactory, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogMessage("hello", MessageImportance.High),
@@ -366,8 +366,8 @@ Write-Error boom
 @{ foo = 'bar' } | Format-Table -AutoSize
 ";
 
-            var parameters = new ExecuteParameters { Expression = script };
-            InvokePowerShell.Execute(parameters, buildTaskLog);
+            var commandFactory = new CommandFactory { Expression = script };
+            InvokePowerShell.Execute(commandFactory, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogMessage("hi", MessageImportance.High),
@@ -391,8 +391,8 @@ foo  bar
         {
             var buildTaskLog = new MockBuildTaskLog();
 
-            var parameters = new ExecuteParameters { Expression = "& cmd /c echo hi" };
-            InvokePowerShell.Execute(parameters, buildTaskLog);
+            var commandFactory = new CommandFactory { Expression = "& cmd /c echo hi" };
+            InvokePowerShell.Execute(commandFactory, buildTaskLog);
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogMessage("hi", MessageImportance.High));

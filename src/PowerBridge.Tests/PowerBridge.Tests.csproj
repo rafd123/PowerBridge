@@ -78,7 +78,7 @@
     <Compile Include="IntegrationTests\InvokePowerShellTest.cs" />
     <Compile Include="Mocks\MockBuildTaskLog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UnitTests\ExecuteParametersTest.cs" />
+    <Compile Include="UnitTests\CommandFactoryTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="IntegrationTests\InvokePowerShellTestResources\WhenInvokingScriptFileWithArguments.ps1" />

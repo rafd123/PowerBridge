@@ -5,7 +5,7 @@ using System.Text;
 
 namespace PowerBridge.Internal
 {
-    internal sealed class ExecuteParameters
+    internal sealed class CommandFactory
     {
         private readonly IFileSystem _fileSystem;
         private string _expression;
@@ -17,7 +17,7 @@ namespace PowerBridge.Internal
         private string _arguments;
         private bool _argumentsSpecified;
 
-        public ExecuteParameters(IFileSystem fileSystem = null)
+        public CommandFactory(IFileSystem fileSystem = null)
         {
             _fileSystem = fileSystem ?? new FileSystem();
         }
@@ -55,7 +55,7 @@ namespace PowerBridge.Internal
             }
         }
 
-        public Command GetCommand()
+        public Command CreateCommand()
         {
             if (_expressionSpecified && _fileSpecifed)
             {

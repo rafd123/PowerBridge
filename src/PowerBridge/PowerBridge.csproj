@@ -53,7 +53,7 @@
     <Compile Include="Internal\IPowerShellCallStackProvider.cs" />
     <Compile Include="Internal\IPowerShellStringProvider.cs" />
     <Compile Include="Internal\LogEntryInfo.cs" />
-    <Compile Include="Internal\ExecuteParameters.cs" />
+    <Compile Include="Internal\CommandFactory.cs" />
     <Compile Include="Internal\IFileSystem.cs" />
     <Compile Include="Internal\IPowerShellHostOutput.cs" />
     <Compile Include="Internal\IBuildTaskLog.cs" />
