@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Management.Automation;
 using System.Management.Automation.Host;
+using System.Management.Automation.Runspaces;
 using System.Security;
 using System.Threading;
 
@@ -13,9 +14,44 @@ namespace PowerBridge.Internal
         private readonly UserInterface _ui;
         private readonly Guid _instanceId = Guid.NewGuid();
 
-        public PowerShellHost(IPowerShellHostOutput output)
+        private PowerShellHost(IPowerShellHostOutput output)
         {
             _ui = new UserInterface(output);
+        }
+
+        public static void WithPowerShell(IBuildTaskLog log, Action<PowerShell, IPowerShellHostOutput> action)
+        {
+            Environment.SetEnvironmentVariable("PSExecutionPolicyPreference", "Bypass");
+
+            using (var powerShell = PowerShell.Create())
+            using (var powerShellHostOutput = new PowerShellHostOutput(log, new PowerShellCallStackProvider(powerShell)))
+            {
+                var host = new PowerShellHost(powerShellHostOutput);
+                using (var runspace = RunspaceFactory.CreateRunspace(host))
+                {
+                    powerShell.Runspace = runspace;
+                    powerShell.Streams.Error.DataAdded += (sender, args) =>
+                    {
+                        powerShellHostOutput.WriteError(powerShell.Streams.Error[args.Index]);
+                    };
+
+                    runspace.Open();
+
+                    try
+                    {
+                        action(powerShell, powerShellHostOutput);
+                    }
+                    catch (RuntimeException e)
+                    {
+                        if (e.ErrorRecord == null)
+                        {
+                            throw;
+                        }
+
+                        powerShellHostOutput.WriteError(e.ErrorRecord);
+                    }
+                }
+            }               
         }
 
         public override System.Globalization.CultureInfo CurrentCulture
