@@ -129,6 +129,9 @@
   <data name="ExpressionOrFileParameterMustBeSpecified" xml:space="preserve">
     <value>Either the Expression or File parameter must be specified.</value>
   </data>
+  <data name="FileParameterMustBeSpecified" xml:space="preserve">
+    <value>A value for the File parameter must be specified.</value>
+  </data>
   <data name="PowerShellPromptNotAvailable" xml:space="preserve">
     <value>Windows PowerShell is in non-interactive mode. Read and Prompt functionality is not available.</value>
   </data>

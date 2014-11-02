@@ -83,15 +83,7 @@ namespace PowerBridge.Internal
                     throw new ArgumentException(error);
                 }
 
-                var filePath = _fileSystem.GetFullPath(_file);
-                if (!_fileSystem.FileExists(filePath))
-                {
-                    var error = string.Format(CultureInfo.CurrentCulture,
-                        Resources.PowerShellScriptFileDoesNotExistFormat,
-                        _file);
-
-                    throw new ArgumentException(error);
-                }
+                var filePath = ConvertPowerShellFileParameterValueToFullPath.Execute(_file, _fileSystem);
 
                 var commandBuilder = new StringBuilder();
                 commandBuilder.Append("& '");

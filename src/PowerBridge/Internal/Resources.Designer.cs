@@ -97,6 +97,15 @@ namespace PowerBridge.Internal {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A value for the File parameter must be specified..
+        /// </summary>
+        internal static string FileParameterMustBeSpecified {
+            get {
+                return ResourceManager.GetString("FileParameterMustBeSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Windows PowerShell is in non-interactive mode. Read and Prompt functionality is not available..
         /// </summary>
         internal static string PowerShellPromptNotAvailable {

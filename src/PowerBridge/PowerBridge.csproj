@@ -57,6 +57,7 @@
     <Compile Include="Internal\IFileSystem.cs" />
     <Compile Include="Internal\IPowerShellHostOutput.cs" />
     <Compile Include="Internal\IBuildTaskLog.cs" />
+    <Compile Include="Internal\ConvertPowerShellFileParameterValueToFullPath.cs" />
     <Compile Include="Internal\PowerShellOutputList.cs" />
     <Compile Include="Internal\PowerShellHost.cs" />
     <Compile Include="Internal\Resources.Designer.cs">
