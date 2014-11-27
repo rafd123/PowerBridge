@@ -66,7 +66,7 @@ namespace PowerBridge.Internal
             {
                 if (_argumentsSpecified)
                 {
-                    throw new ArgumentException(Resources.ArgumentParameterNotValidWithExpressionParameter);
+                    throw new ArgumentException(Resources.ArgumentsParameterNotValidWithExpressionParameter);
                 }
 
                 return new Command(_expression, isScript: true);

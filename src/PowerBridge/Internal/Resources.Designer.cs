@@ -63,9 +63,9 @@ namespace PowerBridge.Internal {
         /// <summary>
         ///   Looks up a localized string similar to The Arguments parameter can only be specified with the File parameter..
         /// </summary>
-        internal static string ArgumentParameterNotValidWithExpressionParameter {
+        internal static string ArgumentsParameterNotValidWithExpressionParameter {
             get {
-                return ResourceManager.GetString("ArgumentParameterNotValidWithExpressionParameter", resourceCulture);
+                return ResourceManager.GetString("ArgumentsParameterNotValidWithExpressionParameter", resourceCulture);
             }
         }
         
