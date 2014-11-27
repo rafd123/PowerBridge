@@ -75,15 +75,18 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="IntegrationTests\InvokePowerShellTest.cs" />
+    <Compile Include="IntegrationTests\IntegrationTest.cs" />
+    <Compile Include="IntegrationTests\InvokePowerShellWithFileTest.cs" />
+    <Compile Include="IntegrationTests\InvokePowerShellWithExpressionTest.cs" />
     <Compile Include="Mocks\MockBuildTaskLog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnitTests\CommandFactoryTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="IntegrationTests\InvokePowerShellTestResources\WhenInvokingScriptFileWithArguments.ps1" />
+    <None Include="IntegrationTests\InvokePowerShellWithExpressionTestResources\WhenInvokingScriptFile.ps1" />
+    <None Include="IntegrationTests\InvokePowerShellWithFileTestResources\WhenInvokingScriptFileWithArguments.ps1" />
     <None Include="packages.config" />
-    <None Include="IntegrationTests\InvokePowerShellTestResources\WhenInvokingScriptFile.ps1" />
+    <None Include="IntegrationTests\InvokePowerShellWithFileTestResources\WhenInvokingScriptFile.ps1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PowerBridge\PowerBridge.csproj">

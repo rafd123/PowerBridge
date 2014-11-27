@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.IO;
-using System.Runtime.CompilerServices;
 using Microsoft.Build.Framework;
 using NUnit.Framework;
 using PowerBridge.Internal;
@@ -11,10 +9,10 @@ using PowerBridge.Tests.Mocks;
 namespace PowerBridge.Tests.IntegrationTests
 {
     [TestFixture]
-    public class InvokePowerShellTest
+    public class InvokePowerShellWithExpressionTest : IntegrationTest
     {
         [Test]
-        public void WhenInvokeWriteHostAsExpression()
+        public void WhenInvokeWriteHost()
         {
             var buildTaskLog = new MockBuildTaskLog();
 
@@ -26,21 +24,7 @@ namespace PowerBridge.Tests.IntegrationTests
         }
 
         [Test]
-        public void WhenInvokeWriteHostAsFile()
-        {
-            var buildTaskLog = new MockBuildTaskLog();
-
-            var commandFactory = new CommandFactory { File = "Write-Host 'hello'" };
-            var exception = Assert.Throws<ArgumentException>(() => InvokePowerShell.Execute(commandFactory, buildTaskLog));
-
-            Assert.AreEqual(
-                "Processing File 'Write-Host 'hello'' failed because the file does not have a '.ps1' " +
-                "extension. Specify a valid Windows PowerShell script file name, and then try again.",
-                exception.Message);
-        }
-
-        [Test]
-        public void WhenInvokeWriteHostNoNewLineAsExpression()
+        public void WhenInvokeWriteHostNoNewLine()
         {
             var buildTaskLog = new MockBuildTaskLog();
 
@@ -52,7 +36,7 @@ namespace PowerBridge.Tests.IntegrationTests
         }
 
         [Test]
-        public void WhenInvokeWriteWarningAsExpression()
+        public void WhenInvokeWriteWarning()
         {
             var buildTaskLog = new MockBuildTaskLog();
 
@@ -64,7 +48,7 @@ namespace PowerBridge.Tests.IntegrationTests
         }
 
         [Test]
-        public void WhenInvokeWriteVerboseAsExpression()
+        public void WhenInvokeWriteVerbose()
         {
             var buildTaskLog = new MockBuildTaskLog();
 
@@ -76,7 +60,7 @@ namespace PowerBridge.Tests.IntegrationTests
         }
 
         [Test]
-        public void WhenInvokeWriteDebugAsExpression()
+        public void WhenInvokeWriteDebug()
         {
             var buildTaskLog = new MockBuildTaskLog();
 
@@ -93,7 +77,7 @@ namespace PowerBridge.Tests.IntegrationTests
         }
 
         [Test]
-        public void WhenInvokeReadHostAsExpression()
+        public void WhenInvokeReadHost()
         {
             var buildTaskLog = new MockBuildTaskLog();
 
@@ -109,7 +93,7 @@ namespace PowerBridge.Tests.IntegrationTests
         }
 
         [Test]
-        public void WhenInvokeReadHostAsSecureStringAsExpression()
+        public void WhenInvokeReadHostAsSecureString()
         {
             var buildTaskLog = new MockBuildTaskLog();
 
@@ -125,7 +109,7 @@ namespace PowerBridge.Tests.IntegrationTests
         }
 
         [Test]
-        public void WhenInvokeGetCredentialAsExpression()
+        public void WhenInvokeGetCredential()
         {
             var buildTaskLog = new MockBuildTaskLog();
 
@@ -141,7 +125,7 @@ namespace PowerBridge.Tests.IntegrationTests
         }
 
         [Test]
-        public void WhenInvokeWriteErrorAsExpression()
+        public void WhenInvokeWriteError()
         {
             var buildTaskLog = new MockBuildTaskLog();
 
@@ -157,7 +141,7 @@ namespace PowerBridge.Tests.IntegrationTests
         }
         
         [Test]
-        public void WhenInvokeWriteWarningWithExplicitFilenameAndLineAsExpression()
+        public void WhenInvokeWriteWarningWithExplicitFilenameAndLine()
         {
             var buildTaskLog = new MockBuildTaskLog();
 
@@ -172,7 +156,7 @@ namespace PowerBridge.Tests.IntegrationTests
         }
 
         [Test]
-        public void WhenInvokeWriteWarningWithExplicitFilenameLineAndColumnAsExpression()
+        public void WhenInvokeWriteWarningWithExplicitFilenameLineAndColumn()
         {
             var buildTaskLog = new MockBuildTaskLog();
 
@@ -188,7 +172,7 @@ namespace PowerBridge.Tests.IntegrationTests
         }
 
         [Test]
-        public void WhenInvokeWriteErrorWithExplicitFilenameAndLineAsExpression()
+        public void WhenInvokeWriteErrorWithExplicitFilenameAndLine()
         {
             var buildTaskLog = new MockBuildTaskLog();
 
@@ -205,7 +189,7 @@ namespace PowerBridge.Tests.IntegrationTests
         }
 
         [Test]
-        public void WhenInvokeWriteErrorWithExplicitFilenameLineAndColumnAsExpression()
+        public void WhenInvokeWriteErrorWithExplicitFilenameLineAndColumn()
         {
             var buildTaskLog = new MockBuildTaskLog();
 
@@ -223,7 +207,7 @@ namespace PowerBridge.Tests.IntegrationTests
         }
 
         [Test]
-        public void WhenInvokeWriteErrorMultilineWithExplicitFilenameAndLineAsExpression()
+        public void WhenInvokeWriteErrorMultilineWithExplicitFilenameAndLine()
         {
             var buildTaskLog = new MockBuildTaskLog();
 
@@ -240,7 +224,7 @@ namespace PowerBridge.Tests.IntegrationTests
         }
 
         [Test]
-        public void WhenInvokingScriptFileAsExpression()
+        public void WhenInvokingScriptFile()
         {
             var buildTaskLog = new MockBuildTaskLog();
             var scriptFilePath = GetTestResourceFilePath("WhenInvokingScriptFile.ps1");
@@ -267,69 +251,7 @@ namespace PowerBridge.Tests.IntegrationTests
         }
 
         [Test]
-        public void WhenInvokingScriptFileAsFile()
-        {
-            var buildTaskLog = new MockBuildTaskLog();
-            var scriptFilePath = GetTestResourceFilePath("WhenInvokingScriptFile.ps1");
-
-            var commandFactory = new CommandFactory { File = scriptFilePath };
-            InvokePowerShell.Execute(commandFactory, buildTaskLog);
-
-            buildTaskLog.AssertLogEntriesAre(
-                new LogMessage("Alive", MessageImportance.High),
-                new LogWarning(
-                    file: scriptFilePath,
-                    lineNumber: 2,
-                    message: "Danger"),
-                new LogError(
-                    file: scriptFilePath,
-                    lineNumber: 3,
-                    message: "Dead" + Environment.NewLine +
-                             "at <ScriptBlock>, " + scriptFilePath + ": line 3" + Environment.NewLine +
-                             "at <ScriptBlock>, <No file>: line 1"));
-        }
-
-        [Test]
-        public void WhenInvokingScriptFileWithArgumentsAsFile()
-        {
-            var buildTaskLog = new MockBuildTaskLog();
-            var scriptFilePath = GetTestResourceFilePath("WhenInvokingScriptFileWithArguments.ps1");
-
-            var commandFactory = new CommandFactory { File = scriptFilePath, Arguments = "-Arg1 foo -Arg2 bar"};
-            InvokePowerShell.Execute(commandFactory, buildTaskLog);
-
-            buildTaskLog.AssertLogEntriesAre(
-                new LogMessage("Arg1 = foo", MessageImportance.High),
-                new LogMessage("Arg2 = bar", MessageImportance.High),
-                new LogMessage("Alive", MessageImportance.High),
-                new LogWarning(
-                    file: scriptFilePath,
-                    lineNumber: 10,
-                    message: "Danger"),
-                new LogError(
-                    file: scriptFilePath,
-                    lineNumber: 11,
-                    message: "Dead" + Environment.NewLine +
-                             "at <ScriptBlock>, " + scriptFilePath + ": line 11" + Environment.NewLine +
-                             "at <ScriptBlock>, <No file>: line 1"));
-        }
-
-        [Test]
-        public void WhenInvokingNonExistentScriptFileAsFile()
-        {
-            var buildTaskLog = new MockBuildTaskLog();
-
-            var commandFactory = new CommandFactory { File = "7d680d7c-3214-43c6-8eec-3b00a40ab91e.ps1" };
-            var exception = Assert.Throws<ArgumentException>(() => InvokePowerShell.Execute(commandFactory, buildTaskLog));
-
-            Assert.AreEqual(
-                "The argument '7d680d7c-3214-43c6-8eec-3b00a40ab91e.ps1' to the File parameter " +
-                "does not exist. Provide the path to an existing '.ps1' file as an argument to the File parameter.",
-                exception.Message);
-        }
-
-        [Test]
-        public void WhenInvokingComplexInlineScriptAsExpression()
+        public void WhenInvokingComplexInlineScript()
         {
             var buildTaskLog = new MockBuildTaskLog();
 
@@ -396,30 +318,6 @@ foo  bar
 
             buildTaskLog.AssertLogEntriesAre(
                 new LogMessage("hi", MessageImportance.High));
-        }
-
-        private static string GetTestResourceFilePath(string testResource, [CallerFilePath] string sourceFilePath = "")
-        {
-            sourceFilePath = NormalizePath(sourceFilePath);
-
-            return Path.Combine(
-                Path.GetDirectoryName(sourceFilePath),
-                Path.GetFileNameWithoutExtension(sourceFilePath) + "Resources",
-                testResource);
-        }
-
-        private static string NormalizePath(string path)
-        {
-            // Capitalize the drive is necessary
-            if (Path.IsPathRooted(path))
-            {
-                if (path[0] != char.ToUpperInvariant(path[0]))
-                {
-                    path = char.ToUpperInvariant(path[0]) + path.Substring(1);
-                }
-            }
-
-            return path;
         }
     }
 }
