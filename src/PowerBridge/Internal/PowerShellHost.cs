@@ -29,6 +29,7 @@ namespace PowerBridge.Internal
                 var host = new PowerShellHost(powerShellHostOutput);
                 using (var runspace = RunspaceFactory.CreateRunspace(host))
                 {
+                    Runspace.DefaultRunspace = runspace;
                     powerShell.Runspace = runspace;
                     powerShell.Streams.Error.DataAdded += (sender, args) =>
                     {
