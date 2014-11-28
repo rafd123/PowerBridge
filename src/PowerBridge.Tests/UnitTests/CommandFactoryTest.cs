@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Microsoft.Build.Framework;
 using Moq;
 using NUnit.Framework;
 using PowerBridge.Internal;
@@ -12,11 +13,13 @@ namespace PowerBridge.Tests.UnitTests
         [Test]
         public void WhenExpressionIsSpecified()
         {
+            var commandProvider = new Mock<IPowerShellCommandParameterProvider>();
+
             var command = new CommandFactory
             {
                 Expression = "test"
             }
-            .CreateCommand();
+            .CreateCommand(commandProvider.Object);
 
             Assert.IsTrue(command.IsScript);
             Assert.AreEqual("test", command.CommandText);
@@ -29,11 +32,13 @@ namespace PowerBridge.Tests.UnitTests
             fileSystem.Setup(x => x.FileExists(It.IsAny<string>())).Returns((string path) => true);
             fileSystem.Setup(x => x.GetFullPath(It.IsAny<string>())).Returns((string path) => path);
 
+            var commandProvider = new Mock<IPowerShellCommandParameterProvider>();
+
             var command = new CommandFactory(fileSystem: fileSystem.Object)
             {
                 File = @"C:\test.ps1"
             }
-            .CreateCommand();
+            .CreateCommand(commandProvider.Object);
 
             Assert.IsTrue(command.IsScript);
             Assert.AreEqual(@"& 'C:\test.ps1'", command.CommandText);
@@ -46,12 +51,14 @@ namespace PowerBridge.Tests.UnitTests
             fileSystem.Setup(x => x.FileExists(It.IsAny<string>())).Returns((string path) => true);
             fileSystem.Setup(x => x.GetFullPath(It.IsAny<string>())).Returns((string path) => path);
 
+            var commandProvider = new Mock<IPowerShellCommandParameterProvider>();
+
             var command = new CommandFactory(fileSystem: fileSystem.Object)
             {
                 File = @"C:\test.ps1",
                 Arguments = "-Arg1 foo -Arg2 bar"
             }
-            .CreateCommand();
+            .CreateCommand(commandProvider.Object);
 
             Assert.IsTrue(command.IsScript);
             Assert.AreEqual(@"& 'C:\test.ps1' -Arg1 foo -Arg2 bar", command.CommandText);
@@ -60,13 +67,15 @@ namespace PowerBridge.Tests.UnitTests
         [Test]
         public void WhenFileAndExpressionAreSpecified()
         {
+            var commandProvider = new Mock<IPowerShellCommandParameterProvider>();
+
             var exception = Assert.Throws<ArgumentException>(() =>
                 new CommandFactory
                 {
                     File = @"C:\test.ps1",
                     Expression = "test"
                 }
-                .CreateCommand());
+                .CreateCommand(commandProvider.Object));
 
             Assert.AreEqual(
                 "You cannot specify both the Expression and File parameters simultaneously.",
@@ -74,15 +83,36 @@ namespace PowerBridge.Tests.UnitTests
         }
 
         [Test]
+        public void WhenArgumentsAndAutoParametersAreSpecified()
+        {
+            var commandProvider = new Mock<IPowerShellCommandParameterProvider>();
+
+            var exception = Assert.Throws<ArgumentException>(() =>
+                new CommandFactory
+                {
+                    File = @"C:\test.ps1",
+                    Arguments = "-Arg1 foo -Arg2 bar",
+                    AutoParameters = new ITaskItem[0]
+                }
+                .CreateCommand(commandProvider.Object));
+
+            Assert.AreEqual(
+                "You cannot specify both the Arguments and AutoParameters parameters simultaneously.",
+                exception.Message);
+        }
+
+        [Test]
         public void WhenExpressionAndArgumentsAreSpecified()
         {
+            var commandProvider = new Mock<IPowerShellCommandParameterProvider>();
+
             var exception = Assert.Throws<ArgumentException>(() =>
                 new CommandFactory
                 {
                     Expression = "test",
                     Arguments = "-Arg1 foo -Arg2 bar"
                 }
-                .CreateCommand());
+                .CreateCommand(commandProvider.Object));
 
             Assert.AreEqual(
                 "The Arguments parameter can only be specified with the File parameter.",
@@ -90,9 +120,29 @@ namespace PowerBridge.Tests.UnitTests
         }
 
         [Test]
+        public void WhenExpressionAndAutoParametersAreSpecified()
+        {
+            var commandProvider = new Mock<IPowerShellCommandParameterProvider>();
+
+            var exception = Assert.Throws<ArgumentException>(() =>
+                new CommandFactory
+                {
+                    Expression = "test",
+                    AutoParameters = new ITaskItem[0]
+                }
+                .CreateCommand(commandProvider.Object));
+
+            Assert.AreEqual(
+                "The AutoParameters parameter can only be specified with the File parameter.",
+                exception.Message);
+        }
+
+        [Test]
         public void WhenFileOrExpressionAreNotSpecified()
         {
-            var exception = Assert.Throws<ArgumentException>(() => new CommandFactory().CreateCommand());
+            var commandProvider = new Mock<IPowerShellCommandParameterProvider>();
+
+            var exception = Assert.Throws<ArgumentException>(() => new CommandFactory().CreateCommand(commandProvider.Object));
 
             Assert.AreEqual(
                 "Either the Expression or File parameter must be specified.",
@@ -102,12 +152,14 @@ namespace PowerBridge.Tests.UnitTests
         [Test]
         public void WhenNonPs1FileIsSpecified()
         {
+            var commandProvider = new Mock<IPowerShellCommandParameterProvider>();
+
             var exception = Assert.Throws<ArgumentException>(() =>
                 new CommandFactory
                 {
                     File = @"C:\test.txt"
                 }
-                .CreateCommand());
+                .CreateCommand(commandProvider.Object));
 
             Assert.AreEqual(
                 @"Processing File 'C:\test.txt' failed because the file does not have a '.ps1' " +
@@ -122,12 +174,14 @@ namespace PowerBridge.Tests.UnitTests
             fileSystem.Setup(x => x.FileExists(It.IsAny<string>())).Returns((string path) => false);
             fileSystem.Setup(x => x.GetFullPath(It.IsAny<string>())).Returns((string path) => path);
 
+            var commandProvider = new Mock<IPowerShellCommandParameterProvider>();
+
             var exception = Assert.Throws<ArgumentException>(() =>
                 new CommandFactory(fileSystem: fileSystem.Object)
                 {
                     File = @"C:\test.ps1"
                 }
-                .CreateCommand());
+                .CreateCommand(commandProvider.Object));
 
             Assert.AreEqual(
                 @"The argument 'C:\test.ps1' to the File parameter does not exist. Provide the path " +
@@ -142,11 +196,13 @@ namespace PowerBridge.Tests.UnitTests
             fileSystem.Setup(x => x.FileExists(It.IsAny<string>())).Returns((string path) => true);
             fileSystem.Setup(x => x.GetFullPath(It.IsAny<string>())).Returns((string path) => Path.Combine(@"C:\", path));
 
+            var commandProvider = new Mock<IPowerShellCommandParameterProvider>();
+
             var command = new CommandFactory(fileSystem: fileSystem.Object)
             {
                 File = @"test.ps1"
             }
-            .CreateCommand();
+            .CreateCommand(commandProvider.Object);
             Assert.IsTrue(command.IsScript);
             Assert.AreEqual(@"& 'C:\test.ps1'", command.CommandText);
         }

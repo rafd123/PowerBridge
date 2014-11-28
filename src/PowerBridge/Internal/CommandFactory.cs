@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Management.Automation.Runspaces;
 using System.Text;
+using Microsoft.Build.Framework;
 
 namespace PowerBridge.Internal
 {
@@ -16,6 +19,9 @@ namespace PowerBridge.Internal
 
         private string _arguments;
         private bool _argumentsSpecified;
+
+        private ITaskItem[] _autoParameters;
+        private bool _autoParametersSpecified;
 
         public CommandFactory(IFileSystem fileSystem = null)
         {
@@ -55,7 +61,18 @@ namespace PowerBridge.Internal
             }
         }
 
-        public Command CreateCommand()
+        public ITaskItem[] AutoParameters
+        {
+            get { return _autoParameters; }
+
+            set
+            {
+                _autoParameters = value;
+                _autoParametersSpecified = true;
+            }
+        }
+
+        public Command CreateCommand(IPowerShellCommandParameterProvider commandParameterProvider)
         {
             if (_expressionSpecified && _fileSpecifed)
             {
@@ -69,7 +86,7 @@ namespace PowerBridge.Internal
 
             if (_fileSpecifed)
             {
-                return CreateFileCommand();
+                return CreateFileCommand(commandParameterProvider);
             }
 
             throw new ArgumentException(Resources.ExpressionOrFileParameterMustBeSpecified);
@@ -82,11 +99,21 @@ namespace PowerBridge.Internal
                 throw new ArgumentException(Resources.ArgumentsParameterNotValidWithExpressionParameter);
             }
 
+            if (_autoParametersSpecified)
+            {
+                throw new ArgumentException(Resources.AutoParametersParameterNotValidWithExpressionParameter);
+            }
+
             return new Command(_expression, isScript: true);
         }
 
-        private Command CreateFileCommand()
+        private Command CreateFileCommand(IPowerShellCommandParameterProvider commandParameterProvider)
         {
+            if (_argumentsSpecified && _autoParametersSpecified)
+            {
+                throw new ArgumentException(Resources.ArgumentsAndAutoParametersParametersCannotBeUsedSimultaneously);
+            }
+
             if (!_file.EndsWith(".ps1", StringComparison.OrdinalIgnoreCase))
             {
                 var error = string.Format(CultureInfo.CurrentCulture,
@@ -98,7 +125,9 @@ namespace PowerBridge.Internal
 
             var filePath = ConvertPowerShellFileParameterValueToFullPath.Execute(_file, _fileSystem);
 
-            return CreateFileCommand(filePath);
+            return _autoParametersSpecified
+                ? CreateFileCommandWithAutoParameters(filePath, commandParameterProvider)
+                : CreateFileCommand(filePath);
         }
 
         private Command CreateFileCommand(string filePath)
@@ -114,6 +143,44 @@ namespace PowerBridge.Internal
             }
 
             return new Command(commandBuilder.ToString(), true);
+        }
+
+        private Command CreateFileCommandWithAutoParameters(
+            string filePath,
+            IPowerShellCommandParameterProvider commandParameterProvider)
+        {
+            var command = new Command(filePath, isScript: false);
+            foreach (var kvp in GetCommandParameterValuesThatMatchAutoParameters(filePath, commandParameterProvider))
+            {
+                command.Parameters.Add(kvp.Key, kvp.Value);
+            }
+
+            return command;
+        }
+
+        private IEnumerable<KeyValuePair<string, string>> GetCommandParameterValuesThatMatchAutoParameters(
+            string commandName,
+            IPowerShellCommandParameterProvider commandParameterProvider)
+        {
+            var parameterNames = commandParameterProvider.GetDefaultParameterSetParameterNames(commandName);
+            var autoParametersLookup = AutoParameters
+                .Select(x => new
+                {
+                    ParameterName = x.ItemSpec,
+                    ParameterValue = x.GetMetadata("Value")
+                })
+                .Where(x => !string.IsNullOrEmpty(x.ParameterValue))
+                .ToLookup(x => x.ParameterName, x => x.ParameterValue, StringComparer.OrdinalIgnoreCase)
+                .ToDictionary(x => x.Key, x => x.Last());
+
+            foreach (var parameterName in parameterNames)
+            {
+                string parameterValue;
+                if (autoParametersLookup.TryGetValue(parameterName, out parameterValue))
+                {
+                    yield return new KeyValuePair<string, string>(parameterName, parameterValue);
+                }
+            }
         }
     }
 }

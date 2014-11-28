@@ -7,11 +7,452 @@
     </BuildDependsOn>
   </PropertyGroup>
 
+  <!-- Reserved and well-known properties. See http://msdn.microsoft.com/en-us/library/ms164309.aspx -->
+  <ItemGroup>
+    <PowerBridgeAutoParameters Include="MSBuildBinPath">
+      <Value>$(MSBuildBinPath)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="MSBuildExtensionsPath">
+      <Value>$(MSBuildExtensionsPath)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="MSBuildExtensionsPath32">
+      <Value>$(MSBuildExtensionsPath32)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="MSBuildExtensionsPath64">
+      <Value>$(MSBuildExtensionsPath64)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="MSBuildLastTaskResult">
+      <Value>$(MSBuildLastTaskResult)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="MSBuildNodeCount">
+      <Value>$(MSBuildNodeCount)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="MSBuildProgramFiles32">
+      <Value>$(MSBuildProgramFiles32)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="MSBuildProjectDefaultTargets">
+      <Value>$(MSBuildProjectDefaultTargets)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="MSBuildProjectDirectory">
+      <Value>$(MSBuildProjectDirectory)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="MSBuildProjectDirectoryNoRoot">
+      <Value>$(MSBuildProjectDirectoryNoRoot)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="MSBuildProjectExtension">
+      <Value>$(MSBuildProjectExtension)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="MSBuildProjectFile">
+      <Value>$(MSBuildProjectFile)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="MSBuildProjectFullPath">
+      <Value>$(MSBuildProjectFullPath)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="MSBuildProjectName">
+      <Value>$(MSBuildProjectName)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="MSBuildStartupDirectory">
+      <Value>$(MSBuildStartupDirectory)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="MSBuildThisFile">
+      <Value>$(MSBuildThisFile)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="MSBuildThisFileDirectory">
+      <Value>$(MSBuildThisFileDirectory)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="MSBuildThisFileDirectoryNoRoot">
+      <Value>$(MSBuildThisFileDirectoryNoRoot)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="MSBuildThisFileExtension">
+      <Value>$(MSBuildThisFileExtension)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="MSBuildThisFileFullPath">
+      <Value>$(MSBuildThisFileFullPath)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="MSBuildThisFileName">
+      <Value>$(MSBuildThisFileName)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="MSBuildToolsPath">
+      <Value>$(MSBuildToolsPath)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="MSBuildToolsVersion">
+      <Value>$(MSBuildToolsVersion)</Value>
+    </PowerBridgeAutoParameters>
+  </ItemGroup>
+
+  <!-- Common MSBuild Project Properties. See http://msdn.microsoft.com/en-us/library/bb629394.aspx -->
+  <ItemGroup>
+    <PowerBridgeAutoParameters Include="AdditionalLibPaths">
+      <Value>$(AdditionalLibPaths)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="AddModules">
+      <Value>$(AddModules)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="ALToolPath">
+      <Value>$(ALToolPath)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="ApplicationIcon">
+      <Value>$(ApplicationIcon)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="ApplicationManifest">
+      <Value>$(ApplicationManifest)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="AssemblyOriginatorKeyFile">
+      <Value>$(AssemblyOriginatorKeyFile)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="AssemblySearchPaths">
+      <Value>$(AssemblySearchPaths)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="AssemblyName">
+      <Value>$(AssemblyName)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="BaseAddress">
+      <Value>$(BaseAddress)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="BaseOutputPath">
+      <Value>$(BaseOutputPath)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="BaseIntermediateOutputPath">
+      <Value>$(BaseIntermediateOutputPath)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="BuildInParallel">
+      <Value>$(BuildInParallel)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="BuildProjectReferences">
+      <Value>$(BuildProjectReferences)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="CleanFile">
+      <Value>$(CleanFile)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="CodePage">
+      <Value>$(CodePage)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="CompilerResponseFile">
+      <Value>$(CompilerResponseFile)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="Configuration">
+      <Value>$(Configuration)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="CscToolPath">
+      <Value>$(CscToolPath)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="CustomBeforeMicrosoftCommonTargets">
+      <Value>$(CustomBeforeMicrosoftCommonTargets)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="DebugSymbols">
+      <Value>$(DebugSymbols)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="DefineConstants">
+      <Value>$(DefineConstants)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="DefineDebug">
+      <Value>$(DefineDebug)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="DefineTrace">
+      <Value>$(DefineTrace)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="DebugType">
+      <Value>$(DebugType)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="DelaySign">
+      <Value>$(DelaySign)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="DisabledWarnings">
+      <Value>$(DisabledWarnings)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="DisableFastUpToDateCheck">
+      <Value>$(DisableFastUpToDateCheck)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="DocumentationFile">
+      <Value>$(DocumentationFile)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="ErrorReport">
+      <Value>$(ErrorReport)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="ExcludeDeploymentUrl">
+      <Value>$(ExcludeDeploymentUrl)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="FileAlignment">
+      <Value>$(FileAlignment)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="FrameworkPathOverride">
+      <Value>$(FrameworkPathOverride)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="GenerateDocumentation">
+      <Value>$(GenerateDocumentation)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="IntermediateOutputPath">
+      <Value>$(IntermediateOutputPath)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="KeyContainerName">
+      <Value>$(KeyContainerName)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="KeyOriginatorFile">
+      <Value>$(KeyOriginatorFile)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="NoWin32Manifest">
+      <Value>$(NoWin32Manifest)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="ModuleAssemblyName">
+      <Value>$(ModuleAssemblyName)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="NoLogo">
+      <Value>$(NoLogo)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="NoStdLib">
+      <Value>$(NoStdLib)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="NoVBRuntimeReference">
+      <Value>$(NoVBRuntimeReference)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="NoWin32Manifest">
+      <Value>$(NoWin32Manifest)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="Optimize">
+      <Value>$(Optimize)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="OptionCompare">
+      <Value>$(OptionCompare)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="OptionExplicit">
+      <Value>$(OptionExplicit)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="OptionInfer">
+      <Value>$(OptionInfer)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="OptionStrict">
+      <Value>$(OptionStrict)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="OutputPath">
+      <Value>$(OutputPath)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="OutputType">
+      <Value>$(OutputType)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="OverwriteReadOnlyFiles">
+      <Value>$(OverwriteReadOnlyFiles)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="PdbFile">
+      <Value>$(PdbFile)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="Platform">
+      <Value>$(Platform)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="RemoveIntegerChecks">
+      <Value>$(RemoveIntegerChecks)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="SGenUseProxyTypes">
+      <Value>$(SGenUseProxyTypes)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="SGenToolPath">
+      <Value>$(SGenToolPath)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="StartupObject">
+      <Value>$(StartupObject)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="ProcessorArchitecture">
+      <Value>$(ProcessorArchitecture)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="RootNamespace">
+      <Value>$(RootNamespace)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="Satellite_AlgorithmId">
+      <Value>$(Satellite_AlgorithmId)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="Satellite_BaseAddress">
+      <Value>$(Satellite_BaseAddress)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="Satellite_CompanyName">
+      <Value>$(Satellite_CompanyName)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="Satellite_Configuration">
+      <Value>$(Satellite_Configuration)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="Satellite_Description">
+      <Value>$(Satellite_Description)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="Satellite_EvidenceFile">
+      <Value>$(Satellite_EvidenceFile)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="Satellite_FileVersion">
+      <Value>$(Satellite_FileVersion)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="Satellite_Flags">
+      <Value>$(Satellite_Flags)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="Satellite_GenerateFullPaths">
+      <Value>$(Satellite_GenerateFullPaths)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="Satellite_LinkResource">
+      <Value>$(Satellite_LinkResource)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="Satellite_MainEntryPoint">
+      <Value>$(Satellite_MainEntryPoint)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="Satellite_ProductName">
+      <Value>$(Satellite_ProductName)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="Satellite_ProductVersion">
+      <Value>$(Satellite_ProductVersion)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="Satellite_TargetType">
+      <Value>$(Satellite_TargetType)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="Satellite_Title">
+      <Value>$(Satellite_Title)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="Satellite_Trademark">
+      <Value>$(Satellite_Trademark)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="Satellite_Version">
+      <Value>$(Satellite_Version)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="Satellite_Win32Icon">
+      <Value>$(Satellite_Win32Icon)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="Satellite_Win32Resource">
+      <Value>$(Satellite_Win32Resource)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="SubsystemVersion">
+      <Value>$(SubsystemVersion)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="TargetCompactFramework">
+      <Value>$(TargetCompactFramework)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="TargetFrameworkVersion">
+      <Value>$(TargetFrameworkVersion)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="TreatWarningsAsErrors">
+      <Value>$(TreatWarningsAsErrors)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="UseHostCompilerIfAvailable">
+      <Value>$(UseHostCompilerIfAvailable)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="Utf8Output">
+      <Value>$(Utf8Output)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="VbcToolPath">
+      <Value>$(VbcToolPath)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="VbcVerbosity">
+      <Value>$(VbcVerbosity)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="VisualStudioVersion">
+      <Value>$(VisualStudioVersion)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="WarningsAsErrors">
+      <Value>$(WarningsAsErrors)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="WarningsNotAsErrors">
+      <Value>$(WarningsNotAsErrors)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="Win32Manifest">
+      <Value>$(Win32Manifest)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="Win32Resource">
+      <Value>$(Win32Resource)</Value>
+    </PowerBridgeAutoParameters>
+  </ItemGroup>
+
+  <!-- Macros for Build Commands and Properties. See http://msdn.microsoft.com/en-us/library/c02as0cs.aspx -->
+  <ItemGroup>
+    <PowerBridgeAutoParameters Include="RemoteMachine">
+      <Value>$(RemoteMachine)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="Configuration">
+      <Value>$(Configuration)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="Platform">
+      <Value>$(Platform)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="RootNameSpace">
+      <Value>$(RootNameSpace)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="IntDir">
+      <Value>$(IntDir)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="OutDir">
+      <Value>$(OutDir)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="DevEnvDir">
+      <Value>$(DevEnvDir)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="ProjectDir">
+      <Value>$(ProjectDir)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="ProjectPath">
+      <Value>$(ProjectPath)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="ProjectName">
+      <Value>$(ProjectName)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="ProjectFileName">
+      <Value>$(ProjectFileName)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="ProjectExt">
+      <Value>$(ProjectExt)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="SolutionDir">
+      <Value>$(SolutionDir)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="SolutionPath">
+      <Value>$(SolutionPath)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="SolutionName">
+      <Value>$(SolutionName)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="SolutionFileName">
+      <Value>$(SolutionFileName)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="SolutionExt">
+      <Value>$(SolutionExt)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="TargetDir">
+      <Value>$(TargetDir)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="TargetPath">
+      <Value>$(TargetPath)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="TargetName">
+      <Value>$(TargetName)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="TargetFileName">
+      <Value>$(TargetFileName)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="TargetExt">
+      <Value>$(TargetExt)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="VSInstallDir">
+      <Value>$(VSInstallDir)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="VCInstallDir">
+      <Value>$(VCInstallDir)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="FrameworkDir">
+      <Value>$(FrameworkDir)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="FrameworkVersion">
+      <Value>$(FrameworkVersion)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="FrameworkSDKDir">
+      <Value>$(FrameworkSDKDir)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="WebDeployPath">
+      <Value>$(WebDeployPath)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="WebDeployRoot">
+      <Value>$(WebDeployRoot)</Value>
+    </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="FxCopDir">
+      <Value>$(FxCopDir)</Value>
+    </PowerBridgeAutoParameters>
+  </ItemGroup>
+
   <Target Name="PowerBridgeBeforeBuild" Condition="Exists('$(ProjectDir).BuildScripts\BeforeBuild.ps1')">
-    <InvokePowerShell File="$(ProjectDir).BuildScripts\BeforeBuild.ps1" />
+    <InvokePowerShell File="$(ProjectDir).BuildScripts\BeforeBuild.ps1" AutoParameters="@(PowerBridgeAutoParameters)" />
   </Target>
 
   <Target Name="PowerBridgeAfterBuild" Condition="Exists('$(ProjectDir).BuildScripts\AfterBuild.ps1')">
-    <InvokePowerShell File="$(ProjectDir).BuildScripts\AfterBuild.ps1" />
+    <InvokePowerShell File="$(ProjectDir).BuildScripts\AfterBuild.ps1" AutoParameters="@(PowerBridgeAutoParameters)" />
   </Target>
 </Project>

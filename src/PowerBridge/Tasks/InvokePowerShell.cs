@@ -1,4 +1,5 @@
-﻿using Microsoft.Build.Utilities;
+﻿using Microsoft.Build.Framework;
+using Microsoft.Build.Utilities;
 using PowerBridge.Internal;
 
 namespace PowerBridge.Tasks
@@ -25,6 +26,12 @@ namespace PowerBridge.Tasks
             set { _commandFactory.Arguments = value; }
         }
 
+        public ITaskItem[] AutoParameters
+        {
+            get { return _commandFactory.AutoParameters; }
+            set { _commandFactory.AutoParameters = value; }
+        }
+
         public override bool Execute()
         {
             Execute(_commandFactory, new BuildTaskLog(Log));
@@ -34,10 +41,10 @@ namespace PowerBridge.Tasks
 
         internal static void Execute(CommandFactory commandFactory, IBuildTaskLog log)
         {
-            var command = commandFactory.CreateCommand();
-
             PowerShellHost.WithPowerShell(log, (shell, output) =>
             {
+                var command = commandFactory.CreateCommand(new PowerShellCommandParameterProvider());
+
                 shell.Commands.AddCommand(command);
 
                 var outputList = new PowerShellOutputList(output, new PowerShellStringProvider(shell));

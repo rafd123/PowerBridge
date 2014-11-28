@@ -79,11 +79,15 @@
     <Compile Include="IntegrationTests\InvokePowerShellWithFileTest.cs" />
     <Compile Include="IntegrationTests\InvokePowerShellWithExpressionTest.cs" />
     <Compile Include="Mocks\MockBuildTaskLog.cs" />
+    <Compile Include="Mocks\MockPropertyTaskItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnitTests\CommandFactoryTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="IntegrationTests\InvokePowerShellWithExpressionTestResources\WhenInvokingScriptFile.ps1" />
+    <None Include="IntegrationTests\InvokePowerShellWithFileTestResources\WhenInvokingScriptFileThatHasNoDefaultParameterSetWithAutoArguments.ps1" />
+    <None Include="IntegrationTests\InvokePowerShellWithFileTestResources\WhenInvokingScriptFileThatHasDefaultParameterSetWithAutoArguments.ps1" />
+    <None Include="IntegrationTests\InvokePowerShellWithFileTestResources\WhenInvokingScriptFileWithAutoArguments.ps1" />
     <None Include="IntegrationTests\InvokePowerShellWithFileTestResources\WhenInvokingScriptFileWithArguments.ps1" />
     <None Include="packages.config" />
     <None Include="IntegrationTests\InvokePowerShellWithFileTestResources\WhenInvokingScriptFile.ps1" />

@@ -117,8 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ArgumentsAndAutoParametersParametersCannotBeUsedSimultaneously" xml:space="preserve">
+    <value>You cannot specify both the Arguments and AutoParameters parameters simultaneously.</value>
+  </data>
   <data name="ArgumentsParameterNotValidWithExpressionParameter" xml:space="preserve">
     <value>The Arguments parameter can only be specified with the File parameter.</value>
+  </data>
+  <data name="AutoParametersParameterNotValidWithExpressionParameter" xml:space="preserve">
+    <value>The AutoParameters parameter can only be specified with the File parameter.</value>
   </data>
   <data name="CustomFileLineNumberFormat" xml:space="preserve">
     <value>at {0}: line {1}</value>

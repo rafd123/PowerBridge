@@ -61,11 +61,29 @@ namespace PowerBridge.Internal {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You cannot specify both the Arguments and AutoParameters parameters simultaneously..
+        /// </summary>
+        internal static string ArgumentsAndAutoParametersParametersCannotBeUsedSimultaneously {
+            get {
+                return ResourceManager.GetString("ArgumentsAndAutoParametersParametersCannotBeUsedSimultaneously", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The Arguments parameter can only be specified with the File parameter..
         /// </summary>
         internal static string ArgumentsParameterNotValidWithExpressionParameter {
             get {
                 return ResourceManager.GetString("ArgumentsParameterNotValidWithExpressionParameter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The AutoParameters parameter can only be specified with the File parameter..
+        /// </summary>
+        internal static string AutoParametersParameterNotValidWithExpressionParameter {
+            get {
+                return ResourceManager.GetString("AutoParametersParameterNotValidWithExpressionParameter", resourceCulture);
             }
         }
         

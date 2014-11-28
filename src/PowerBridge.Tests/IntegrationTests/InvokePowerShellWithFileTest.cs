@@ -85,5 +85,73 @@ namespace PowerBridge.Tests.IntegrationTests
                 "does not exist. Provide the path to an existing '.ps1' file as an argument to the File parameter.",
                 exception.Message);
         }
+
+        [Test]
+        public void WhenInvokingScriptFileWithAutoArguments()
+        {
+            var buildTaskLog = new MockBuildTaskLog();
+            var scriptFilePath = GetTestResourceFilePath("WhenInvokingScriptFileWithAutoArguments.ps1");
+
+            var commandFactory = new CommandFactory
+            {
+                File = scriptFilePath,
+                AutoParameters = new ITaskItem[]
+                {
+                    new MockPropertyTaskItem(name: "Arg1", value: "foo"), 
+                    new MockPropertyTaskItem(name: "Arg2", value: "bar"), 
+                    new MockPropertyTaskItem(name: "Arg3", value: "baz"),
+                    new MockPropertyTaskItem(name: "Arg4", value: "qux"),
+                }
+            };
+
+            InvokePowerShell.Execute(commandFactory, buildTaskLog);
+
+            buildTaskLog.AssertLogEntriesAre(
+                new LogMessage("Arg1 = foo", MessageImportance.High),
+                new LogMessage("Arg2 = bar", MessageImportance.High));
+        }
+
+        [Test]
+        public void WhenInvokingScriptFileThatHasDefaultParameterSetWithAutoArguments()
+        {
+            var buildTaskLog = new MockBuildTaskLog();
+            var scriptFilePath = GetTestResourceFilePath("WhenInvokingScriptFileThatHasDefaultParameterSetWithAutoArguments.ps1");
+
+            var commandFactory = new CommandFactory
+            {
+                File = scriptFilePath,
+                AutoParameters = new ITaskItem[]
+                {
+                    new MockPropertyTaskItem(name: "Arg1", value: "foo"), 
+                    new MockPropertyTaskItem(name: "Arg2", value: "bar"), 
+                }
+            };
+
+            InvokePowerShell.Execute(commandFactory, buildTaskLog);
+
+            buildTaskLog.AssertLogEntriesAre(
+                new LogMessage("Arg1 = foo", MessageImportance.High),
+                new LogMessage("Arg2 = ", MessageImportance.High));
+        }
+
+        [Test]
+        public void WhenInvokingScriptFileThatHasNoDefaultParameterSetWithAutoArguments()
+        {
+            var buildTaskLog = new MockBuildTaskLog();
+            var scriptFilePath = GetTestResourceFilePath("WhenInvokingScriptFileThatHasNoDefaultParameterSetWithAutoArguments.ps1");
+
+            var commandFactory = new CommandFactory
+            {
+                File = scriptFilePath,
+                AutoParameters = new ITaskItem[]
+                {
+                    new MockPropertyTaskItem(name: "Arg1", value: "foo"), 
+                    new MockPropertyTaskItem(name: "Arg2", value: "bar"), 
+                }
+            };
+
+            var exception = Assert.Throws<InvalidOperationException>(() => InvokePowerShell.Execute(commandFactory, buildTaskLog));
+            Assert.AreEqual(scriptFilePath + " does not have a default parameter set.",  exception.Message);
+        }
     }
 }

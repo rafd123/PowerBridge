@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Internal\IPowerShellCallStackProvider.cs" />
+    <Compile Include="Internal\IPowerShellCommandParameterProvider.cs" />
     <Compile Include="Internal\IPowerShellStringProvider.cs" />
     <Compile Include="Internal\LogEntryInfo.cs" />
     <Compile Include="Internal\CommandFactory.cs" />

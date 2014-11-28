@@ -18,6 +18,6 @@
       ]]></Script>
     </PropertyGroup>
     <InvokePowerShell Expression="$(Script)" />
-    <InvokePowerShell File="Debug.ps1" />
+    <InvokePowerShell File="Debug.ps1" AutoParameters="@(PowerBridgeAutoParameters)" />
   </Target>
 </Project>
