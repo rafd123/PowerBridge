@@ -15,7 +15,7 @@
     <tags>powershell msbuild build task</tags>
   </metadata>
   <files>
-    <file src="PowerBridge.props" target="build"/>
-    <file src="PowerBridge.targets" target="build"/>
+    <file src="NugetPackageFiles\build\PowerBridge.props" target="build"/>
+    <file src="NugetPackageFiles\build\PowerBridge.targets" target="build"/>
   </files>  
 </package>
