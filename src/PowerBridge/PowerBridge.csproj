@@ -74,10 +74,13 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Debug.ps1" />
+    <None Include="NugetPackageFiles\BuildScripts\AfterBuild.ps1" />
+    <None Include="NugetPackageFiles\BuildScripts\BeforeBuild.ps1" />
     <None Include="NugetPackageFiles\build\PowerBridge.targets" />
     <None Include="NugetPackageFiles\build\PowerBridge.props" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="NugetPackageFiles\tools\install.ps1" />
     <None Include="PowerBridge.nuspec" />
   </ItemGroup>
   <ItemGroup>
