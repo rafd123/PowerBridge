@@ -64,41 +64,56 @@ namespace PowerBridge.Internal
 
             if (_expressionSpecified)
             {
-                if (_argumentsSpecified)
-                {
-                    throw new ArgumentException(Resources.ArgumentsParameterNotValidWithExpressionParameter);
-                }
-
-                return new Command(_expression, isScript: true);
+                return CreateExpressionCommand();
             }
 
             if (_fileSpecifed)
             {
-                if (!_file.EndsWith(".ps1", StringComparison.OrdinalIgnoreCase))
-                {
-                    var error = string.Format(CultureInfo.CurrentCulture,
-                        Resources.PowerShellScriptFileMustBeSpecifiedFormat,
-                        _file);
-
-                    throw new ArgumentException(error);
-                }
-
-                var filePath = ConvertPowerShellFileParameterValueToFullPath.Execute(_file, _fileSystem);
-
-                var commandBuilder = new StringBuilder();
-                commandBuilder.Append("& '");
-                commandBuilder.Append(filePath);
-                commandBuilder.Append('\'');
-                if (_argumentsSpecified)
-                {
-                    commandBuilder.Append(' ');
-                    commandBuilder.Append(_arguments);
-                }
-
-                return new Command(commandBuilder.ToString(), true);
+                return CreateFileCommand();
             }
 
             throw new ArgumentException(Resources.ExpressionOrFileParameterMustBeSpecified);
+        }
+
+        private Command CreateExpressionCommand()
+        {
+            if (_argumentsSpecified)
+            {
+                throw new ArgumentException(Resources.ArgumentsParameterNotValidWithExpressionParameter);
+            }
+
+            return new Command(_expression, isScript: true);
+        }
+
+        private Command CreateFileCommand()
+        {
+            if (!_file.EndsWith(".ps1", StringComparison.OrdinalIgnoreCase))
+            {
+                var error = string.Format(CultureInfo.CurrentCulture,
+                    Resources.PowerShellScriptFileMustBeSpecifiedFormat,
+                    _file);
+
+                throw new ArgumentException(error);
+            }
+
+            var filePath = ConvertPowerShellFileParameterValueToFullPath.Execute(_file, _fileSystem);
+
+            return CreateFileCommand(filePath);
+        }
+
+        private Command CreateFileCommand(string filePath)
+        {
+            var commandBuilder = new StringBuilder();
+            commandBuilder.Append("& '");
+            commandBuilder.Append(filePath);
+            commandBuilder.Append('\'');
+            if (_argumentsSpecified)
+            {
+                commandBuilder.Append(' ');
+                commandBuilder.Append(_arguments);
+            }
+
+            return new Command(commandBuilder.ToString(), true);
         }
     }
 }
