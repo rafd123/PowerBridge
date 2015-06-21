@@ -13,6 +13,7 @@
     <description>$description$</description>
     <copyright>$copyright$</copyright>
     <tags>powershell msbuild build task</tags>
+    <developmentDependency>true</developmentDependency>
   </metadata>
   <files>
     <file src="NugetPackageFiles\tools\install.ps1" target="tools"/>
