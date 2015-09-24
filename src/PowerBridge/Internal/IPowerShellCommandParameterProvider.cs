@@ -14,7 +14,7 @@ namespace PowerBridge.Internal
     {
         public string[] GetDefaultParameterSetParameterNames(string commandName)
         {
-            using (var powerShell = PowerShell.Create(RunspaceMode.CurrentRunspace))
+            using (var powerShell = PowerShell.Create(RunspaceMode.NewRunspace))
             {
                 var command = new Command("Get-Command");
                 command.Parameters.Add("Name", commandName);
