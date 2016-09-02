@@ -17,7 +17,7 @@
         Say-Hello -To Rafael
       ]]></Script>
     </PropertyGroup>
-    <InvokePowerShell Expression="$(Script)" />
-    <InvokePowerShell File="Debug.ps1" AutoParameters="@(PowerBridgeAutoParameters)" />
+    <PowerBridge.Tasks.InvokePowerShell Expression="$(Script)" />
+    <PowerBridge.Tasks.InvokePowerShell File="Debug.ps1" AutoParameters="@(PowerBridgeAutoParameters)" />
   </Target>
 </Project>

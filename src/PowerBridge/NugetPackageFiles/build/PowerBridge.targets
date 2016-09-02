@@ -449,10 +449,10 @@
   </ItemGroup>
 
   <Target Name="PowerBridgeBeforeBuild" Condition="Exists('$(ProjectDir).BuildScripts\BeforeBuild.ps1')">
-    <InvokePowerShell File="$(ProjectDir).BuildScripts\BeforeBuild.ps1" AutoParameters="@(PowerBridgeAutoParameters)" />
+    <PowerBridge.Tasks.InvokePowerShell File="$(ProjectDir).BuildScripts\BeforeBuild.ps1" AutoParameters="@(PowerBridgeAutoParameters)" />
   </Target>
 
   <Target Name="PowerBridgeAfterBuild" Condition="Exists('$(ProjectDir).BuildScripts\AfterBuild.ps1')">
-    <InvokePowerShell File="$(ProjectDir).BuildScripts\AfterBuild.ps1" AutoParameters="@(PowerBridgeAutoParameters)" />
+    <PowerBridge.Tasks.InvokePowerShell File="$(ProjectDir).BuildScripts\AfterBuild.ps1" AutoParameters="@(PowerBridgeAutoParameters)" />
   </Target>
 </Project>
