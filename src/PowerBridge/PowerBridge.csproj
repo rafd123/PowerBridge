@@ -46,7 +46,10 @@
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Management.Automation" />
+    <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.PowerShell.3.ReferenceAssemblies.1.0.0\lib\net4\System.Management.Automation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
@@ -81,6 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="NugetPackageFiles\tools\install.ps1" />
+    <None Include="packages.config" />
     <None Include="PowerBridge.nuspec" />
   </ItemGroup>
   <ItemGroup>
