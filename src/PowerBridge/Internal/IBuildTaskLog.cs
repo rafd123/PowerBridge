@@ -1,4 +1,5 @@
-﻿using Microsoft.Build.Framework;
+﻿using System;
+using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 namespace PowerBridge.Internal
@@ -33,10 +34,12 @@ namespace PowerBridge.Internal
     internal sealed class BuildTaskLog : IBuildTaskLog
     {
         private readonly TaskLoggingHelper _taskLoggingHelper;
+        private readonly bool _useFSharpLineNumbersOffByOneQuirkMode;
 
-        public BuildTaskLog(TaskLoggingHelper taskLoggingHelper)
+        public BuildTaskLog(TaskLoggingHelper taskLoggingHelper, bool useFSharpLineNumbersOffByOneQuirkMode)
         {
             _taskLoggingHelper = taskLoggingHelper;
+            _useFSharpLineNumbersOffByOneQuirkMode = useFSharpLineNumbersOffByOneQuirkMode;
         }
 
         public void LogMessage(MessageImportance messageImportance, string message)
@@ -60,9 +63,9 @@ namespace PowerBridge.Internal
                 warningCode,
                 helpKeyword,
                 file,
-                lineNumber,
+                GetNormalizedLineNumber(lineNumber),
                 columnNumber,
-                endLineNumber,
+                GetNormalizedLineNumber(endLineNumber),
                 endColumnNumber,
                 message);
         }
@@ -83,11 +86,16 @@ namespace PowerBridge.Internal
                 errorCode,
                 helpKeyword,
                 file,
-                lineNumber,
+                GetNormalizedLineNumber(lineNumber),
                 columnNumber,
-                endLineNumber,
+                GetNormalizedLineNumber(endLineNumber),
                 endColumnNumber,
                 message);
+        }
+
+        private int GetNormalizedLineNumber(int lineNumber)
+        {
+            return !_useFSharpLineNumbersOffByOneQuirkMode ? lineNumber : Math.Max(lineNumber - 1, 0);
         }
     }
 }

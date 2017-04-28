@@ -446,6 +446,10 @@
     <PowerBridgeAutoParameters Include="FxCopDir">
       <Value>$(FxCopDir)</Value>
     </PowerBridgeAutoParameters>
+    <PowerBridgeAutoParameters Include="PowerBridgeUseFSharpLineNumbersOffByOneQuirkMode"
+                               Condition="'$(Language)' == 'F#'">
+      <Value>true</Value>
+    </PowerBridgeAutoParameters>
   </ItemGroup>
 
   <Target Name="PowerBridgeBeforeBuild" Condition="Exists('$(ProjectDir).BuildScripts\BeforeBuild.ps1')">

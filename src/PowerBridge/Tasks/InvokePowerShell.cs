@@ -1,4 +1,6 @@
-﻿using Microsoft.Build.Framework;
+﻿using System;
+using System.Linq;
+using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using PowerBridge.Internal;
 
@@ -32,9 +34,20 @@ namespace PowerBridge.Tasks
             set { _commandFactory.AutoParameters = value; }
         }
 
+        private bool UseFSharpLineNumbersOffByOneQuirkMode
+        {
+            get
+            {
+                return (AutoParameters ?? Enumerable.Empty<ITaskItem>())
+                    .Any(x => string.Equals(x.ItemSpec, "PowerBridgeUseFSharpLineNumbersOffByOneQuirkMode", StringComparison.OrdinalIgnoreCase) &&
+                              x.GetMetadata("Value") != null &&
+                              string.Equals(x.GetMetadata("Value").Trim(), "true", StringComparison.OrdinalIgnoreCase));
+            }
+        }
+
         public override bool Execute()
         {
-            Execute(_commandFactory, new BuildTaskLog(Log));
+            Execute(_commandFactory, new BuildTaskLog(Log, useFSharpLineNumbersOffByOneQuirkMode: UseFSharpLineNumbersOffByOneQuirkMode));
 
             return !Log.HasLoggedErrors;
         }
