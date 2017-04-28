@@ -23,7 +23,19 @@ $shouldCreateDefaultBuildScripts = -not $buildScriptsProjectItemExists -and `
                                    -not $legacyInvokePowerShellTaskExists
 
 if($shouldCreateDefaultBuildScripts)
-{    
-    $project.ProjectItems.AddFromDirectory($buildScriptsSourceDirectoryPath)
-}
+{
+    if ($project.Type -eq 'F#')
+    {
+        $buildScriptsDestinationDirectoryPath = Join-Path $projectDirectoryPath $buildScriptsDirectoryName
+        robocopy $buildScriptsSourceDirectoryPath $buildScriptsDestinationDirectoryPath
 
+        $folderNode = $project.Project.CreateFolderNodes($buildScriptsDestinationDirectoryPath)
+        Get-ChildItem $buildScriptsDestinationDirectoryPath | ForEach-Object {
+            $project.Project.AddNewFileNodeToHierarchy($folderNode, $_.FullName) | Out-Null
+        }
+    }
+    else
+    {
+        $project.ProjectItems.AddFromDirectory($buildScriptsSourceDirectoryPath) | Out-Null
+    }
+}
